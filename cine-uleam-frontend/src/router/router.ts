@@ -4,6 +4,7 @@ import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import AdminCartelera from '../components/AdminCartelera.vue';
 import Cartelera from '../components/Cartelera.vue';
+import Sugerencia from '../components/Sugerencia.vue';
 import ForgotPassword from '../components/ForgotPassword.vue';
 import ResetPassword from '../components/ResetPassword.vue';
 import GeneradorQR from '../components/GeneradorQR.vue';
@@ -45,6 +46,10 @@ const routes = [
     name: 'Cartelera',
     component: Cartelera
   },
+  {
+    path: '/sugerencia',
+    name: 'Sugerencia',
+    component: Sugerencia
   { 
     path: '/generar-qr', 
     name: 'GeneradorQR',
