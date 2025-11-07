@@ -50,6 +50,7 @@ const routes = [
     path: '/sugerencia',
     name: 'Sugerencia',
     component: Sugerencia
+  },
   { 
     path: '/generar-qr', 
     name: 'GeneradorQR',
