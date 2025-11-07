@@ -5,8 +5,8 @@ import Register from '../components/Register.vue';
 import AdminCartelera from '../components/AdminCartelera.vue';
 import Cartelera from '../components/Cartelera.vue';
 import Sugerencia from '../components/Sugerencia.vue';
-import ForgotPassword from '../components/ForgotPassword.vue';
-import ResetPassword from '../components/ResetPassword.vue';
+//import ForgotPassword from '../components/ForgotPassword.vue';
+//import ResetPassword from '../components/ResetPassword.vue';
 import GeneradorQR from '../components/GeneradorQR.vue';
 import EscanerQR from '../components/EscanerQR.vue';
 import AdminSecretRegister from '../components/AdminSecretRegister.vue';
@@ -30,15 +30,40 @@ const routes = [
     component: Register,
     meta: { requiresGuest: true }
   },
-  {
-    path: '/forgot-password',
-    name: 'ForgotPassword',
-    component: ForgotPassword
+  { 
+    path: '/AdminCartelera', 
+    name: 'AdminCartelera',
+    component: AdminCartelera
+  },
+  // { 
+  //   path: '/forgot-password', 
+  //   name: 'ForgotPassword',
+  //   component: ForgotPassword
+  // },
+  // { 
+  //   path: '/reset-password', 
+  //   name: 'ResetPassword',
+  //   component: ResetPassword
+  // },
+  { 
+    path: '/AdminRegister', 
+    name: 'AdminRegister',
+    component: AdminCartelera
+  },
+  { 
+    path: '/cartelera', 
+    name: 'Cartelera',
+    component: Cartelera
   },
   {
-    path: '/reset-password',
-    name: 'ResetPassword',
-    component: ResetPassword
+    path: '/sugerencia',
+    name: 'Sugerencia',
+    component: Sugerencia
+  },
+  { 
+    path: '/generar-qr', 
+    name: 'GeneradorQR',
+    component: GeneradorQR
   },
   {
     path: '/admin-secret-register',
