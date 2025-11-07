@@ -13,6 +13,7 @@ import ForgotPassword from '../components/ForgotPassword.vue';
 import Proximas from '../components/Proximas.vue';
 import Contacto from '../components/Contacto.vue';
 import AcercaDe from '../components/AcercaDe.vue';
+import AlquilerSala from '../components/AlquilerSala.vue';
 import { supabase } from '../lib/connectSupabase';
 
 const routes = [
@@ -99,6 +100,12 @@ const routes = [
     path: '/acerca-de',
     name: 'AcercaDe',
     component: AcercaDe
+  },
+  {
+    path: '/alquiler-sala',
+    name: 'AlquilerSala',
+    component: AlquilerSala,
+    meta: { requiresAuth: true }
   }
 ];
 
