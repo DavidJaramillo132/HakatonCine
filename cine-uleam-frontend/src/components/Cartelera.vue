@@ -24,7 +24,7 @@
               v-model="filtroGenero"
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent transition duration-200"
             >
-              <option value="">Todos los géneros</option>
+              <option value="">Todos los generos</option>
               <option value="Acción">Acción</option>
               <option value="Comedia">Comedia</option>
               <option value="Drama">Drama</option>
