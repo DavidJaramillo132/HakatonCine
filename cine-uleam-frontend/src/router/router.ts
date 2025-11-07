@@ -8,6 +8,10 @@ import Sugerencia from '../components/Sugerencia.vue';
 import GeneradorQR from '../components/GeneradorQR.vue';
 import EscanerQR from '../components/EscanerQR.vue';
 import AdminSecretRegister from '../components/AdminSecretRegister.vue';
+import ForgotPassword from '../components/ForgotPassword.vue';
+import Proximas from '../components/Proximas.vue';
+import Contacto from '../components/Contacto.vue';
+import AcercaDe from '../components/AcercaDe.vue';
 import { supabase } from '../lib/connectSupabase';
 
 const routes = [
@@ -67,6 +71,27 @@ const routes = [
     name: 'AdminSecretRegister',
     component: AdminSecretRegister,
     meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPassword,
+    meta: { requiresGuest: true }
+  },
+  {
+    path: '/proximas',
+    name: 'Proximas',
+    component: Proximas
+  },
+  {
+    path: '/contacto',
+    name: 'Contacto',
+    component: Contacto
+  },
+  {
+    path: '/acerca-de',
+    name: 'AcercaDe',
+    component: AcercaDe
   }
 ];
 

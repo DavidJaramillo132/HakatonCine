@@ -24,7 +24,7 @@
 
       <!-- Filtros -->
       <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- Filtro de Género -->
           <div>
             <label for="genero" class="block text-sm font-medium text-gray-700 mb-2">
@@ -43,24 +43,6 @@
               <option value="Ciencia Ficción">Ciencia Ficción</option>
               <option value="Romance">Romance</option>
               <option value="Aventura">Aventura</option>
-            </select>
-          </div>
-
-          <!-- Filtro de Clasificación -->
-          <div>
-            <label for="clasificacion" class="block text-sm font-medium text-gray-700 mb-2">
-              Clasificación
-            </label>
-            <select 
-              id="clasificacion" 
-              v-model="filtroClasificacion"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent transition duration-200"
-            >
-              <option value="">Todas las clasificaciones</option>
-              <option value="ATP">ATP</option>
-              <option value="+13">+13</option>
-              <option value="+16">+16</option>
-              <option value="+18">+18</option>
             </select>
           </div>
 
@@ -285,7 +267,6 @@ const peliculaSeleccionada = ref<IPelicula | null>(null)
 // Filtros
 const busqueda = ref('')
 const filtroGenero = ref('')
-const filtroClasificacion = ref('')
 
 // Cargar películas desde Supabase
 const cargarPeliculas = async () => {
@@ -314,9 +295,8 @@ const peliculasFiltradas = computed(() => {
   return peliculas.value.filter(pelicula => {
     const coincideBusqueda = pelicula.titulo.toLowerCase().includes(busqueda.value.toLowerCase())
     const coincideGenero = !filtroGenero.value || pelicula.genero === filtroGenero.value
-    const coincideClasificacion = !filtroClasificacion.value || pelicula.clasificacion === filtroClasificacion.value
 
-    return coincideBusqueda && coincideGenero && coincideClasificacion
+    return coincideBusqueda && coincideGenero
   })
 })
 
