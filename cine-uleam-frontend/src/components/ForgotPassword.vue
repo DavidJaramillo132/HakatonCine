@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8 relative z-10">
     <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-2xl relative z-20">
-      <!-- Header -->
+      <!-- Header d -->
       <div class="text-center">
         <h2 class="text-3xl font-extrabold text-gray-900">
           Recuperar Contraseña
