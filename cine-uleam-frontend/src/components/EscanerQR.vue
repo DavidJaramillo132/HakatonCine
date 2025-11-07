@@ -3,37 +3,11 @@
     <div class="container mx-auto px-2 md:px-4 max-w-4xl">
       <div class="bg-white rounded-xl shadow-lg p-4 md:p-8">
         <h1 class="text-2xl md:text-3xl font-bold text-[#8B0000] mb-4 md:mb-6 text-center">
-          Escáner de QR
+          📷 Escáner de QR
         </h1>
 
-        <!-- Opciones de Escaneo -->
-        <div class="flex flex-col sm:flex-row gap-2 md:gap-4 mb-4 md:mb-6">
-          <button
-            @click="cambiarModo('camara')"
-            :class="[
-              'flex-1 py-2.5 md:py-3 px-3 md:px-4 rounded-lg font-medium transition-all text-sm md:text-base',
-              modoEscaneo === 'camara'
-                ? 'bg-[#8B0000] text-white shadow-lg'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            ]"
-          >
-            Cámara
-          </button>
-          <button
-            @click="cambiarModo('manual')"
-            :class="[
-              'flex-1 py-2.5 md:py-3 px-3 md:px-4 rounded-lg font-medium transition-all text-sm md:text-base',
-              modoEscaneo === 'manual'
-                ? 'bg-[#8B0000] text-white shadow-lg'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            ]"
-          >
-            Manual
-          </button>
-        </div>
-
         <!-- Modo Cámara -->
-        <div v-if="modoEscaneo === 'camara'" class="space-y-4 md:space-y-6">
+        <div class="space-y-4 md:space-y-6">
           <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 text-xs md:text-sm text-blue-800">
             <p class="font-medium mb-1 md:mb-0">Instrucciones:</p>
             <ul class="list-disc list-inside space-y-0.5 md:space-y-1 text-xs md:text-sm">
@@ -82,29 +56,6 @@
               Detener
             </button>
           </div>
-        </div>
-
-        <!-- Modo Manual -->
-        <div v-if="modoEscaneo === 'manual'" class="space-y-4 md:space-y-6">
-          <div>
-            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-2">
-              ID de Reserva o contenido del QR:
-            </label>
-            <textarea
-              v-model="qrManual"
-              rows="3"
-              class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent font-mono text-xs md:text-sm"
-              placeholder="Pega el ID de reserva o contenido del QR..."
-            ></textarea>
-          </div>
-
-          <button
-            @click="procesarQRManual"
-            :disabled="!qrManual.trim()"
-            class="w-full bg-[#8B0000] text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-[#A52A2A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            🔍 Validar
-          </button>
         </div>
 
         <!-- Resultado del Escaneo -->
@@ -218,41 +169,8 @@
             @click="resetearEscaneo"
             class="w-full bg-[#8B0000] text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-[#A52A2A] transition-colors"
           >
-            {{ modoEscaneo === 'camara' ? 'Escanear Siguiente' : 'Validar Otro' }}
+            🔄 Escanear Siguiente
           </button>
-        </div>
-
-        <!-- Historial de Escaneos -->
-        <div v-if="historial.length > 0" class="mt-6 md:mt-8">
-          <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3 md:mb-4">Historial de Escaneos</h3>
-          <div class="space-y-2">
-            <div
-              v-for="(item, index) in historial"
-              :key="index"
-              :class="[
-                'p-3 md:p-4 rounded-lg border text-xs md:text-sm',
-                item.valido
-                  ? 'bg-green-50 border-green-200'
-                  : 'bg-red-50 border-red-200'
-              ]"
-            >
-              <div class="flex justify-between items-start gap-2">
-                <div class="flex-1 min-w-0">
-                  <span class="font-semibold block truncate">{{ item.nombre || 'Desconocido' }}</span>
-                  <span class="text-gray-600 block truncate text-xs">{{ item.pelicula || 'N/A' }}</span>
-                </div>
-                <span :class="[
-                  'text-lg flex-shrink-0',
-                  item.valido ? 'text-green-600' : 'text-red-600'
-                ]">
-                  {{ item.valido ? '✓' : '✗' }}
-                </span>
-              </div>
-              <div class="text-xs text-gray-500 mt-1">
-                {{ new Date(item.timestamp).toLocaleString('es-ES') }}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -268,12 +186,9 @@ import { supabase } from '../lib/connectSupabase'
 
 // Referencias
 const videoElement = ref<HTMLVideoElement | null>(null)
-const modoEscaneo = ref<'camara' | 'manual'>('camara')
 const escaneando = ref(false)
-const qrManual = ref('')
 
 // Escáner
-//let codeReader: BrowserQRCodeReader | null = null
 let codeReader: BrowserMultiFormatReader | null = null
 let videoStream: MediaStream | null = null
 
@@ -287,15 +202,6 @@ const resultado = ref<{
 
 // Historial
 const historial = ref<any[]>([])
-
-// Cambiar modo de escaneo
-const cambiarModo = (modo: 'camara' | 'manual') => {
-  if (escaneando.value) {
-    detenerEscaneo()
-  }
-  modoEscaneo.value = modo
-  resultado.value = null
-}
 
 // Iniciar escaneo con cámara
 const iniciarEscaneo = async () => {
@@ -376,11 +282,6 @@ const detenerEscaneo = () => {
   }
   
   escaneando.value = false
-}
-
-// Procesar QR manual
-const procesarQRManual = async () => {
-  await procesarQR(qrManual.value)
 }
 
 // Procesar contenido del QR
@@ -529,13 +430,10 @@ const confirmarEntrada = async () => {
 // Resetear escaneo
 const resetearEscaneo = async () => {
   resultado.value = null
-  qrManual.value = ''
   
-  // Si estaba en modo cámara, reiniciar el escaneo automáticamente
-  if (modoEscaneo.value === 'camara') {
-    await new Promise(resolve => setTimeout(resolve, 500)) // Pequeño delay
-    await iniciarEscaneo()
-  }
+  // Reiniciar el escaneo automáticamente
+  await new Promise(resolve => setTimeout(resolve, 500)) // Pequeño delay
+  await iniciarEscaneo()
 }
 
 // Agregar al historial
