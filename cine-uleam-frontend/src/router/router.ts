@@ -4,6 +4,8 @@ import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import AdminCartelera from '../components/AdminCartelera.vue';
 import Cartelera from '../components/Cartelera.vue';
+import ForgotPassword from '../components/ForgotPassword.vue';
+import ResetPassword from '../components/ResetPassword.vue';
 import GeneradorQR from '../components/GeneradorQR.vue';
 import EscanerQR from '../components/EscanerQR.vue';
 
@@ -22,6 +24,16 @@ const routes = [
     path: '/register', 
     name: 'Register',
     component: Register
+  },
+  { 
+    path: '/forgot-password', 
+    name: 'ForgotPassword',
+    component: ForgotPassword
+  },
+  { 
+    path: '/reset-password', 
+    name: 'ResetPassword',
+    component: ResetPassword
   },
   { 
     path: '/AdminRegister', 
