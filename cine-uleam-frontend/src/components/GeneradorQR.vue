@@ -44,7 +44,6 @@
                 <div class="text-sm space-y-1 opacity-90">
                   <p v-if="peliculaSeleccionada.duracion_min">⏱️ {{ peliculaSeleccionada.duracion_min }} min</p>
                   <p v-if="peliculaSeleccionada.genero">🎭 {{ peliculaSeleccionada.genero }}</p>
-                  <p v-if="peliculaSeleccionada.clasificacion">🔞 {{ peliculaSeleccionada.clasificacion }}</p>
                 </div>
               </div>
             </div>
