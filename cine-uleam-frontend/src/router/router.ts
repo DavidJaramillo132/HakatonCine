@@ -59,7 +59,7 @@ const routes = [
     path: '/escanear-qr',
     name: 'EscanerQR',
     component: EscanerQR,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/admin',
@@ -140,6 +140,7 @@ router.beforeEach(async (to, _from, next) => {
   const isAuthenticated = Boolean(session) || Boolean(storedId);
   const metadataRole = (session?.user?.user_metadata?.role as string | undefined) ?? storedRole ?? null;
 
+  // Sincronizar datos de sesión con localStorage
   if (session && !storedId) {
     localStorage.setItem('userId', session.user.id);
   }
@@ -152,32 +153,67 @@ router.beforeEach(async (to, _from, next) => {
     localStorage.setItem('userName', session.user.user_metadata.full_name as string);
   }
 
+  // Validar coherencia: si no hay sesión pero hay localStorage, limpiar localStorage
+  if (!session && storedId) {
+    console.warn('Sesión expirada, limpiando localStorage');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
+    
+    if (to.meta?.requiresAuth) {
+      return next({ path: '/login', query: { redirect: to.fullPath } });
+    }
+  }
+
+  // Protección: Rutas que requieren autenticación
   if (to.meta?.requiresAuth && !isAuthenticated) {
+    console.warn('Acceso denegado: requiere autenticación');
     return next({ path: '/login', query: { redirect: to.fullPath } });
   }
 
+  // Protección: Rutas exclusivas para administradores
   if (to.meta?.requiresAdmin) {
     if (!isAuthenticated) {
+      console.warn('Acceso denegado: requiere autenticación');
       return next({ path: '/login', query: { redirect: to.fullPath } });
     }
 
     if (metadataRole !== 'admin') {
+      console.warn('Acceso denegado: requiere rol admin');
       return next(metadataRole === 'estudiante' ? '/cartelera' : '/');
     }
   }
 
+  // Protección: Rutas exclusivas para estudiantes
   if (to.meta?.requiresStudent) {
     if (!isAuthenticated) {
+      console.warn('Acceso denegado: requiere autenticación');
       return next({ path: '/login', query: { redirect: to.fullPath } });
     }
 
     if (metadataRole !== 'estudiante') {
+      console.warn('Acceso denegado: requiere rol estudiante');
       return next(metadataRole === 'admin' ? '/admin' : '/');
     }
   }
 
+  // Protección: Rutas solo para invitados (no autenticados)
   if (to.meta?.requiresGuest && isAuthenticated) {
+    console.warn('Acceso denegado: ya está autenticado');
     return next(metadataRole === 'admin' ? '/admin' : '/cartelera');
+  }
+
+  // Protección adicional: Verificar rutas críticas manualmente
+  const adminPaths = ['/admin', '/admin/cartelera', '/admin/notificaciones', '/admin/encuestas', '/admin-secret-register', '/escanear-qr'];
+  if (adminPaths.some(path => to.path.startsWith(path)) && metadataRole !== 'admin') {
+    console.error('Intento de acceso no autorizado a ruta de administrador');
+    return next('/');
+  }
+
+  const studentPaths = ['/sugerencia', '/encuestas'];
+  if (studentPaths.some(path => to.path.startsWith(path)) && metadataRole !== 'estudiante') {
+    console.error('Intento de acceso no autorizado a ruta de estudiante');
+    return next('/');
   }
 
   return next();
