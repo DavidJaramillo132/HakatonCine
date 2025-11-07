@@ -178,20 +178,6 @@
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
                     />
                   </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Clasificación *</label>
-                    <select
-                      v-model="formPelicula.clasificacion"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
-                    >
-                      <option value="">Seleccionar...</option>
-                      <option value="A">A - Todo público</option>
-                      <option value="B">B - Mayores de 12 años</option>
-                      <option value="C">C - Mayores de 15 años</option>
-                      <option value="D">D - Mayores de 18 años</option>
-                    </select>
-                  </div>
                   <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">URL del Póster</label>
                     <input
@@ -270,7 +256,7 @@
                   />
                   <div class="p-4">
                     <h4 class="font-bold text-lg text-gray-800">{{ pelicula.titulo }}</h4>
-                    <p class="text-sm text-gray-600 mt-1">{{ pelicula.duracion_min }} min • {{ pelicula.clasificacion }}</p>
+                    <p class="text-sm text-gray-600 mt-1">{{ pelicula.duracion_min }} min</p>
                     <p class="text-sm text-gray-500 mt-1">{{ pelicula.genero }}</p>
                     <p class="text-sm text-gray-700 mt-2 line-clamp-2">{{ pelicula.sinopsis }}</p>
                     
@@ -442,7 +428,6 @@ const formPelicula = reactive({
   director: '',
   duracion_min: 0,
   genero: '',
-  clasificacion: '',
   poster_url: '',
   sinopsis: '',
 })
@@ -593,7 +578,6 @@ const seleccionarPeliculaAPI = async (pelicula: any) => {
       formPelicula.director = data.Director
       formPelicula.duracion_min = parseInt(data.Runtime) || 0
       formPelicula.genero = data.Genre.split(',')[0].trim()
-      formPelicula.clasificacion = data.Rated
       formPelicula.poster_url = data.Poster !== 'N/A' ? data.Poster : ''
       formPelicula.sinopsis = data.Plot
       
@@ -618,7 +602,6 @@ const guardarPelicula = async () => {
       director: formPelicula.director,
       duracion_min: formPelicula.duracion_min,
       genero: formPelicula.genero,
-      clasificacion: formPelicula.clasificacion,
       poster_url: formPelicula.poster_url,
       sinopsis: formPelicula.sinopsis
     }
@@ -656,7 +639,6 @@ const editarPelicula = (pelicula: IPelicula) => {
   formPelicula.director = pelicula.director || ''
   formPelicula.duracion_min = pelicula.duracion_min || 0
   formPelicula.genero = pelicula.genero || ''
-  formPelicula.clasificacion = pelicula.clasificacion || ''
   formPelicula.poster_url = pelicula.poster_url || ''
   formPelicula.sinopsis = pelicula.sinopsis || ''
   
@@ -690,7 +672,6 @@ const cancelarFormulario = () => {
   formPelicula.director = ''
   formPelicula.duracion_min = 0
   formPelicula.genero = ''
-  formPelicula.clasificacion = ''
   formPelicula.poster_url = ''
   formPelicula.sinopsis = ''
   peliculaSeleccionada.value = false
