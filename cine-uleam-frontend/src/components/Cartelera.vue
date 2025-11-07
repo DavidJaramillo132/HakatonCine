@@ -206,6 +206,8 @@
                 {{ peliculaSeleccionada.duracion_min }} min
               </span>
 
+            </div>
+
             <!-- Género -->
             <div v-if="peliculaSeleccionada.genero">
               <span class="text-sm font-semibold text-gray-700">Género:</span>
@@ -240,7 +242,6 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
