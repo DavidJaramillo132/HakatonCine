@@ -24,8 +24,8 @@ const routes = [
     component: Register
   },
   { 
-    path: '/AdminRegister', 
-    name: 'AdminRegister',
+    path: '/AdminCartelera', 
+    name: 'AdminCartelera',
     component: AdminCartelera
   },
   { 
