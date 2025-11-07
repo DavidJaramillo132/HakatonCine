@@ -277,15 +277,15 @@
                     <div class="flex gap-2 mt-4">
                       <button
                         @click="editarPelicula(pelicula)"
-                        class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+                        class="flex-1 bg-[#8B0000] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
                       >
-                        ✏️ Editar
+                        Editar
                       </button>
                       <button
                         @click="eliminarPelicula(pelicula.id)"
-                        class="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
+                        class="flex-1 bg-[#8B0000] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
                       >
-                        🗑️ Eliminar
+                        Eliminar
                       </button>
                     </div>
                   </div>
@@ -445,8 +445,6 @@ const formPelicula = reactive({
   clasificacion: '',
   poster_url: '',
   sinopsis: '',
-  fecha_inicio: '',
-  fecha_fin: ''
 })
 
 const formFuncion = reactive({
@@ -622,9 +620,7 @@ const guardarPelicula = async () => {
       genero: formPelicula.genero,
       clasificacion: formPelicula.clasificacion,
       poster_url: formPelicula.poster_url,
-      sinopsis: formPelicula.sinopsis,
-      fecha_inicio: formPelicula.fecha_inicio || null,
-      fecha_fin: formPelicula.fecha_fin || null
+      sinopsis: formPelicula.sinopsis
     }
 
     if (peliculaEditando.value) {
@@ -663,8 +659,6 @@ const editarPelicula = (pelicula: IPelicula) => {
   formPelicula.clasificacion = pelicula.clasificacion || ''
   formPelicula.poster_url = pelicula.poster_url || ''
   formPelicula.sinopsis = pelicula.sinopsis || ''
-  formPelicula.fecha_inicio = pelicula.fecha_inicio || ''
-  formPelicula.fecha_fin = pelicula.fecha_fin || ''
   
   peliculaEditando.value = pelicula.id
   modoAgregar.value = 'manual'
@@ -699,8 +693,6 @@ const cancelarFormulario = () => {
   formPelicula.clasificacion = ''
   formPelicula.poster_url = ''
   formPelicula.sinopsis = ''
-  formPelicula.fecha_inicio = ''
-  formPelicula.fecha_fin = ''
   peliculaSeleccionada.value = false
   peliculaEditando.value = null
   resultadosBusqueda.value = []
