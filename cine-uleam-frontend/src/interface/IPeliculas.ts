@@ -4,7 +4,6 @@ export interface IPelicula {
   sinopsis?: string
   genero?: string
   duracion_min?: number
-  clasificacion?: string
   director?: string
   poster_url?: string
   fecha_inicio?: string
