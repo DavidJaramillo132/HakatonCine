@@ -447,17 +447,6 @@ const enviarSugerencia = async () => {
   try {
     const comentario = mensaje.value.trim()
 
-    const { data: admins, error: adminError } = await supabase
-      .from('usuarios')
-      .select('id, nombre')
-      .eq('rol', 'admin')
-
-    if (adminError) throw adminError
-
-    if (!admins || admins.length === 0) {
-      throw new Error('No se encontraron administradores para recibir la sugerencia.')
-    }
-
     const mensajeNotificacion = [
       `Película sugerida: ${peliculaSeleccionada.titulo}`,
       peliculaSeleccionada.genero ? `Género: ${peliculaSeleccionada.genero}` : null,
@@ -468,17 +457,18 @@ const enviarSugerencia = async () => {
       .filter(Boolean)
       .join('\n')
 
-    const registros = admins.map(admin => ({
-      usuario_id: admin.id,
-      titulo: 'Sugerencia de película',
-      mensaje: mensajeNotificacion,
-      tipo: 'sugerencia',
-      leida: false
-    }))
-
+    // Insertar la sugerencia directamente en la tabla de notificaciones
+    // Los administradores verán todas las sugerencias en su vista
+    // Nota: Usamos 'recomendacion' porque es el tipo permitido en el constraint de la BD
     const { error: notificacionError } = await supabase
       .from('notificaciones')
-      .insert(registros)
+      .insert([{
+        usuario_id: usuarioId, // Guardamos el ID del estudiante que envió la sugerencia
+        titulo: 'Sugerencia de película',
+        mensaje: mensajeNotificacion,
+        tipo: 'recomendacion', // Usamos 'recomendacion' que está permitido en el constraint
+        leida: false
+      }])
 
     if (notificacionError) throw notificacionError
 

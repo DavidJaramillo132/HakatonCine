@@ -8,6 +8,7 @@ import Sugerencia from '../components/Sugerencia.vue';
 import GeneradorQR from '../components/GeneradorQR.vue';
 import EscanerQR from '../components/EscanerQR.vue';
 import AdminSecretRegister from '../components/AdminSecretRegister.vue';
+import AdminNotificaciones from '../components/AdminNotificaciones.vue';
 import { supabase } from '../lib/connectSupabase';
 
 const routes = [
@@ -66,6 +67,12 @@ const routes = [
     path: '/admin-secret-register',
     name: 'AdminSecretRegister',
     component: AdminSecretRegister,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/notificaciones',
+    name: 'AdminNotificaciones',
+    component: AdminNotificaciones,
     meta: { requiresAuth: true, requiresAdmin: true }
   }
 ];
