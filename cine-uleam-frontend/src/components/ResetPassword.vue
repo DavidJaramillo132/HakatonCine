@@ -208,7 +208,7 @@ onMounted(async () => {
       }
     } else {
       // No es un token de recuperación, verificar si hay sesión
-      const { data: { session } } = await supabase.auth.getSession()
+      //const { data: { session } } = await supabase.auth.getSession()
       isValidToken.value = true // Permitir intentar de todas formas
     }
   } catch (error: any) {
