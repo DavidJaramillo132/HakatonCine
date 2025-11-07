@@ -11,27 +11,32 @@
     <div class="container mx-auto px-6 py-8">
       <!-- Estadísticas Dashboard -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-
-        <div class="bg-white rounded-xl shadow-md p-6 ">
+        <div class="bg-white rounded-xl shadow-md p-6">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-500 text-sm font-medium">Reservas Hoy</p>
               <p class="text-3xl font-bold text-gray-800 mt-2">{{ stats.reservasHoy }}</p>
             </div>
+            <button 
+              @click="cargarEstadisticas"
+              class="text-[#8B0000] hover:text-[#A52A2A] transition-colors"
+              title="Actualizar estadísticas"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
           </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-md p-6 ">
+        <div class="bg-white rounded-xl shadow-md p-6">
           <div class="flex items-center justify-between">
             <div>
               <p class="text-gray-500 text-sm font-medium">Películas Activas</p>
               <p class="text-3xl font-bold text-gray-800 mt-2">{{ stats.peliculasActivas }}</p>
             </div>
-
           </div>
         </div>
-
-
       </div>
 
       <!-- Tabs de Gestión -->
@@ -107,11 +112,16 @@
                   />
                   <button
                     @click="buscarPeliculaAPI"
-                    :disabled="isSearching"
+                    :disabled="isSearching || isTranslating"
                     class="bg-[#8B0000] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#A52A2A] transition-colors disabled:opacity-50"
                   >
                     {{ isSearching ? 'Buscando...' : 'Buscar' }}
                   </button>
+                </div>
+                
+                <div v-if="isTranslating" class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700 flex items-center gap-2">
+                  <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-700"></div>
+                  Traduciendo sinopsis al español...
                 </div>
 
                 <!-- Resultados de búsqueda -->
@@ -177,20 +187,6 @@
                       placeholder="Ej: Acción, Drama, Comedia"
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
                     />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Clasificación *</label>
-                    <select
-                      v-model="formPelicula.clasificacion"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
-                    >
-                      <option value="">Seleccionar...</option>
-                      <option value="A">A - Todo público</option>
-                      <option value="B">B - Mayores de 12 años</option>
-                      <option value="C">C - Mayores de 15 años</option>
-                      <option value="D">D - Mayores de 18 años</option>
-                    </select>
                   </div>
                   <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">URL del Póster</label>
@@ -270,7 +266,7 @@
                   />
                   <div class="p-4">
                     <h4 class="font-bold text-lg text-gray-800">{{ pelicula.titulo }}</h4>
-                    <p class="text-sm text-gray-600 mt-1">{{ pelicula.duracion_min }} min • {{ pelicula.clasificacion }}</p>
+                    <p class="text-sm text-gray-600 mt-1">{{ pelicula.duracion_min }} min</p>
                     <p class="text-sm text-gray-500 mt-1">{{ pelicula.genero }}</p>
                     <p class="text-sm text-gray-700 mt-2 line-clamp-2">{{ pelicula.sinopsis }}</p>
                     
@@ -418,6 +414,7 @@ const activeTab = ref('peliculas')
 const modoAgregar = ref<'api' | 'manual'>('api')
 const searchQuery = ref('')
 const isSearching = ref(false)
+const isTranslating = ref(false)
 const isLoadingPeliculas = ref(true)
 const resultadosBusqueda = ref<any[]>([])
 const peliculaSeleccionada = ref(false)
@@ -442,7 +439,6 @@ const formPelicula = reactive({
   director: '',
   duracion_min: 0,
   genero: '',
-  clasificacion: '',
   poster_url: '',
   sinopsis: '',
 })
@@ -466,6 +462,11 @@ onMounted(async () => {
   await cargarFunciones()
   await cargarSalas()
   await cargarEstadisticas()
+  
+  // Actualizar estadísticas cada 30 segundos para reflejar nuevas reservas
+  setInterval(async () => {
+    await cargarEstadisticas()
+  }, 30000) // 30 segundos
 })
 
 // Cargar películas desde Supabase
@@ -544,13 +545,41 @@ const cargarEstadisticas = async () => {
     
     stats.funcionesHoy = funcionesCount || 0
 
-    // Contar reservas de hoy (si existe tabla de reservas)
-    const { count: reservasCount } = await supabase
-      .from('reservas')
-      .select('*', { count: 'exact', head: true })
-      .gte('creada_en', hoy)
+    // Contar reservas de hoy
+    // Intentar múltiples métodos para contar reservas del día
+    const inicioHoy = new Date()
+    inicioHoy.setHours(0, 0, 0, 0)
+    const finHoy = new Date()
+    finHoy.setHours(23, 59, 59, 999)
     
-    stats.reservasHoy = reservasCount || 0
+    try {
+      // Método 1: Usar campo creada_en si existe
+      const { data: reservasData, error: reservasError } = await supabase
+        .from('reservas')
+        .select('id')
+        .gte('creada_en', inicioHoy.toISOString())
+        .lte('creada_en', finHoy.toISOString())
+      
+      if (!reservasError && reservasData) {
+        stats.reservasHoy = reservasData.length
+      } else {
+        // Método 2: Contar todas las reservas activas de hoy
+        const { count: reservasCount } = await supabase
+          .from('reservas')
+          .select('*', { count: 'exact', head: true })
+          .eq('estado', 'activa')
+        
+        stats.reservasHoy = reservasCount || 0
+      }
+    } catch (error) {
+      console.error('Error cargando reservas:', error)
+      // Método 3: Contar todas las reservas sin filtro
+      const { count: reservasCount } = await supabase
+        .from('reservas')
+        .select('*', { count: 'exact', head: true })
+      
+      stats.reservasHoy = reservasCount || 0
+    }
   } catch (error) {
     console.error('Error cargando estadísticas:', error)
   }
@@ -581,8 +610,33 @@ const buscarPeliculaAPI = async () => {
 }
 
 
+// Función para traducir texto al español
+const traducirTexto = async (texto: string): Promise<string> => {
+  if (!texto || texto === 'N/A') return texto
+  
+  try {
+    // Usar MyMemory Translation API (gratuita y sin necesidad de API key para uso básico)
+    const response = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(texto)}&langpair=en|es`
+    )
+    const data = await response.json()
+    
+    if (data.responseStatus === 200 && data.responseData) {
+      return data.responseData.translatedText || texto
+    }
+    
+    // Si falla la traducción, retornar el texto original
+    return texto
+  } catch (error) {
+    console.warn('Error al traducir texto:', error)
+    // Si hay error, retornar el texto original
+    return texto
+  }
+}
+
 const seleccionarPeliculaAPI = async (pelicula: any) => {
   try {
+    isTranslating.value = true
     // Obtener detalles completos de la película
     const apiKey = '34e63b5b'
     const response = await fetch(`https://www.omdbapi.com/?i=${pelicula.imdbID}&apikey=${apiKey}`)
@@ -590,18 +644,27 @@ const seleccionarPeliculaAPI = async (pelicula: any) => {
     
     if (data.Response === 'True') {
       formPelicula.titulo = data.Title
-      formPelicula.director = data.Director
-      formPelicula.duracion_min = parseInt(data.Runtime) || 0
-      formPelicula.genero = data.Genre.split(',')[0].trim()
-      formPelicula.clasificacion = data.Rated
+      formPelicula.director = data.Director !== 'N/A' ? data.Director : ''
+      formPelicula.duracion_min = parseInt(data.Runtime?.replace(' min', '')) || 0
+      formPelicula.genero = data.Genre !== 'N/A' ? data.Genre.split(',')[0].trim() : ''
       formPelicula.poster_url = data.Poster !== 'N/A' ? data.Poster : ''
-      formPelicula.sinopsis = data.Plot
+      
+      // Traducir la sinopsis al español
+      const sinopsisOriginal = data.Plot !== 'N/A' ? data.Plot : ''
+      if (sinopsisOriginal) {
+        formPelicula.sinopsis = await traducirTexto(sinopsisOriginal)
+      } else {
+        formPelicula.sinopsis = ''
+      }
       
       peliculaSeleccionada.value = true
       resultadosBusqueda.value = []
     }
   } catch (error) {
     console.error('Error obteniendo detalles:', error)
+    alert('Error al obtener los detalles de la película. Intenta de nuevo.')
+  } finally {
+    isTranslating.value = false
   }
 }
 
@@ -618,7 +681,6 @@ const guardarPelicula = async () => {
       director: formPelicula.director,
       duracion_min: formPelicula.duracion_min,
       genero: formPelicula.genero,
-      clasificacion: formPelicula.clasificacion,
       poster_url: formPelicula.poster_url,
       sinopsis: formPelicula.sinopsis
     }
@@ -656,7 +718,6 @@ const editarPelicula = (pelicula: IPelicula) => {
   formPelicula.director = pelicula.director || ''
   formPelicula.duracion_min = pelicula.duracion_min || 0
   formPelicula.genero = pelicula.genero || ''
-  formPelicula.clasificacion = pelicula.clasificacion || ''
   formPelicula.poster_url = pelicula.poster_url || ''
   formPelicula.sinopsis = pelicula.sinopsis || ''
   
@@ -690,7 +751,6 @@ const cancelarFormulario = () => {
   formPelicula.director = ''
   formPelicula.duracion_min = 0
   formPelicula.genero = ''
-  formPelicula.clasificacion = ''
   formPelicula.poster_url = ''
   formPelicula.sinopsis = ''
   peliculaSeleccionada.value = false
