@@ -131,9 +131,7 @@
               <span v-if="pelicula.duracion_min" class="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full">
                 {{ pelicula.duracion_min }} min
               </span>
-              <span v-if="pelicula.clasificacion" class="text-xs bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full font-semibold">
-                {{ pelicula.clasificacion }}
-              </span>
+ 
             </div>
 
             <!-- Género -->
@@ -207,9 +205,6 @@
             <div class="flex flex-wrap gap-2">
               <span v-if="peliculaSeleccionada.duracion_min" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm">
                 {{ peliculaSeleccionada.duracion_min }} min
-              </span>
-              <span v-if="peliculaSeleccionada.clasificacion" class="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg text-sm font-semibold">
-                {{ peliculaSeleccionada.clasificacion }}
               </span>
             </div>
 
