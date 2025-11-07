@@ -230,8 +230,58 @@ const handleRegister = async () => {
   successMessage.value = ''
 
   try {
+    const normalizedEmail = formData.email.trim().toLowerCase()
+
+    const { data: existingUsuario } = await supabase
+      .from('usuarios')
+      .select('id, correo, rol, nombre')
+      .eq('correo', normalizedEmail)
+      .maybeSingle()
+
+    const { data: sessionData } = await supabase.auth.getSession()
+    const activeSession = sessionData.session
+
+    if (existingUsuario) {
+      if (!activeSession || activeSession.user.id !== existingUsuario.id) {
+        errorMessage.value = 'Este correo ya está registrado. Inicia sesión con esa cuenta y vuelve a intentarlo.'
+        return
+      }
+
+      const { error: updateAuthError } = await supabase.auth.updateUser({
+        password: formData.password,
+        data: {
+          full_name: formData.fullName,
+          role: 'admin'
+        }
+      })
+
+      if (updateAuthError) throw updateAuthError
+
+      const { error: updateUserError } = await supabase
+        .from('usuarios')
+        .update({
+          nombre: formData.fullName,
+          rol: 'admin'
+        })
+        .eq('id', existingUsuario.id)
+
+      if (updateUserError) throw updateUserError
+
+      localStorage.setItem('userId', existingUsuario.id)
+      localStorage.setItem('userRole', 'admin')
+      localStorage.setItem('userName', formData.fullName)
+
+      successMessage.value = '¡Tu cuenta fue promovida a administrador! Redirigiendo al panel...'
+      resetForm()
+
+      setTimeout(() => {
+        router.push('/admin')
+      }, 1500)
+      return
+    }
+
     const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: formData.email,
+      email: normalizedEmail,
       password: formData.password,
       options: {
         data: {
