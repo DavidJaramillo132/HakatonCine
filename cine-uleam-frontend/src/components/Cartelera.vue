@@ -270,8 +270,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { supabase } from '../lib/connectSupabase'
 import type { IPelicula } from '../interface/IPeliculas'
+
+const router = useRouter()
 
 // Estado
 const peliculas = ref<IPelicula[]>([])
@@ -327,10 +330,22 @@ const cerrarModal = () => {
 }
 
 const reservar = (pelicula: IPelicula) => {
-  // Aquí puedes navegar a una página de reserva
-  console.log('Reservar película:', pelicula.titulo)
+  // Verificar autenticación
+  const userId = localStorage.getItem('userId')
+  
+  if (!userId) {
+    alert('Debes iniciar sesión para hacer una reserva')
+    router.push('/login')
+    return
+  }
+  
+  // Redirigir a generar QR con la película preseleccionada
+  router.push({
+    path: '/generar-qr',
+    query: { pelicula_id: pelicula.id }
+  })
+  
   cerrarModal()
-  // router.push({ name: 'Reserva', params: { peliculaId: pelicula.id } })
 }
 
 // Lifecycle
