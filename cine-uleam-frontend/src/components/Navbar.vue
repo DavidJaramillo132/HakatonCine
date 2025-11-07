@@ -59,6 +59,8 @@
                                 class="hover:text-yellow-400 transition-colors duration-200 font-medium"
                             >
                                 Alquiler de Sala
+                                </router-link>
+                        </li>
                         <li v-if="isStudent">
                             <router-link 
                                 to="/encuestas" 
@@ -169,6 +171,8 @@
                             class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
                         >
                             Alquiler de Sala
+                        </router-link>
+                    </li>
                     <li v-if="isStudent">
                         <router-link 
                             to="/encuestas" 
