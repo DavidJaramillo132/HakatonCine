@@ -1,45 +1,45 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
-    <div class="container mx-auto px-4 max-w-4xl">
-      <div class="bg-white rounded-xl shadow-lg p-8">
-        <h1 class="text-3xl font-bold text-[#8B0000] mb-6 text-center">
-          Escáner de QR - Validación de Entrada
+  <div class="min-h-screen bg-gray-50 py-4 md:py-8">
+    <div class="container mx-auto px-2 md:px-4 max-w-4xl">
+      <div class="bg-white rounded-xl shadow-lg p-4 md:p-8">
+        <h1 class="text-2xl md:text-3xl font-bold text-[#8B0000] mb-4 md:mb-6 text-center">
+          Escáner de QR
         </h1>
 
         <!-- Opciones de Escaneo -->
-        <div class="flex gap-4 mb-6">
+        <div class="flex flex-col sm:flex-row gap-2 md:gap-4 mb-4 md:mb-6">
           <button
-            @click="modoEscaneo = 'camara'"
+            @click="cambiarModo('camara')"
             :class="[
-              'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
+              'flex-1 py-2.5 md:py-3 px-3 md:px-4 rounded-lg font-medium transition-all text-sm md:text-base',
               modoEscaneo === 'camara'
                 ? 'bg-[#8B0000] text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             ]"
           >
-            📷 Escanear con Cámara
+            Cámara
           </button>
           <button
-            @click="modoEscaneo = 'manual'"
+            @click="cambiarModo('manual')"
             :class="[
-              'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
+              'flex-1 py-2.5 md:py-3 px-3 md:px-4 rounded-lg font-medium transition-all text-sm md:text-base',
               modoEscaneo === 'manual'
                 ? 'bg-[#8B0000] text-white shadow-lg'
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             ]"
           >
-            Ingreso Manual
+            Manual
           </button>
         </div>
 
         <!-- Modo Cámara -->
-        <div v-if="modoEscaneo === 'camara'" class="space-y-6">
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-            <p class="font-medium">Instrucciones:</p>
-            <ul class="list-disc list-inside mt-2 space-y-1">
-              <li>Permite el acceso a la cámara cuando se solicite</li>
-              <li>Apunta la cámara hacia el código QR</li>
-              <li>El sistema detectará y validará automáticamente</li>
+        <div v-if="modoEscaneo === 'camara'" class="space-y-4 md:space-y-6">
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 text-xs md:text-sm text-blue-800">
+            <p class="font-medium mb-1 md:mb-0">💡 Instrucciones:</p>
+            <ul class="list-disc list-inside space-y-0.5 md:space-y-1 text-xs md:text-sm">
+              <li>Permite el acceso a la cámara</li>
+              <li>Apunta hacia el código QR</li>
+              <li>Se detectará automáticamente</li>
             </ul>
           </div>
 
@@ -49,71 +49,79 @@
               class="w-full h-full object-cover"
               autoplay
               playsinline
+              muted
             ></video>
             
-            <div v-if="escaneando" class="absolute inset-0 flex items-center justify-center">
-              <div class="border-4 border-[#8B0000] rounded-lg" style="width: 250px; height: 250px;">
+            <div v-if="escaneando" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="border-4 border-[#8B0000] rounded-lg" style="width: 60%; max-width: 250px; aspect-ratio: 1;">
                 <div class="w-full h-full border-2 border-white border-dashed animate-pulse"></div>
+              </div>
+            </div>
+
+            <!-- Indicador de estado -->
+            <div v-if="escaneando" class="absolute top-2 left-2 right-2 md:top-4 md:left-4 md:right-4">
+              <div class="bg-[#8B0000] text-white px-3 py-1.5 rounded-lg text-xs md:text-sm font-medium inline-block">
+                Buscando código QR...
               </div>
             </div>
           </div>
 
-          <div class="flex gap-4">
+          <div class="flex gap-2 md:gap-4">
             <button
               v-if="!escaneando"
               @click="iniciarEscaneo"
-              class="flex-1 bg-[#8B0000] text-white py-3 rounded-lg font-semibold hover:bg-[#A52A2A] transition-colors"
+              class="flex-1 bg-[#8B0000] text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-[#A52A2A] transition-colors"
             >
-              Iniciar Escaneo
+              Iniciar
             </button>
             <button
               v-else
               @click="detenerEscaneo"
-              class="flex-1 bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+              class="flex-1 bg-red-600 text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-red-700 transition-colors"
             >
-              ⏹️ Detener Escaneo
+              Detener
             </button>
           </div>
         </div>
 
         <!-- Modo Manual -->
-        <div v-if="modoEscaneo === 'manual'" class="space-y-6">
+        <div v-if="modoEscaneo === 'manual'" class="space-y-4 md:space-y-6">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Pegar contenido del QR o ID de Reserva:
+            <label class="block text-xs md:text-sm font-medium text-gray-700 mb-2">
+              ID de Reserva o contenido del QR:
             </label>
             <textarea
               v-model="qrManual"
-              rows="4"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent font-mono text-sm"
-              placeholder="Pega aquí el contenido del QR o ingresa el ID de la reserva..."
+              rows="3"
+              class="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent font-mono text-xs md:text-sm"
+              placeholder="Pega el ID de reserva o contenido del QR..."
             ></textarea>
           </div>
 
           <button
             @click="procesarQRManual"
             :disabled="!qrManual.trim()"
-            class="w-full bg-[#8B0000] text-white py-3 rounded-lg font-semibold hover:bg-[#A52A2A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full bg-[#8B0000] text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-[#A52A2A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            🔍 Validar Código
+            🔍 Validar
           </button>
         </div>
 
         <!-- Resultado del Escaneo -->
-        <div v-if="resultado" class="mt-8 space-y-6">
+        <div v-if="resultado" class="mt-4 md:mt-8 space-y-4 md:space-y-6">
           <div
             :class="[
-              'rounded-lg p-6 border-2',
+              'rounded-lg p-4 md:p-6 border-2',
               resultado.valido
                 ? 'bg-green-50 border-green-500'
                 : 'bg-red-50 border-red-500'
             ]"
           >
-            <div class="text-center mb-4">
-              <span class="text-6xl">{{ resultado.valido ? '✅' : '❌' }}</span>
+            <div class="text-center mb-3 md:mb-4">
+              <span class="text-4xl md:text-6xl">{{ resultado.valido ? '✅' : '❌' }}</span>
               <h2
                 :class="[
-                  'text-2xl font-bold mt-2',
+                  'text-xl md:text-2xl font-bold mt-2',
                   resultado.valido ? 'text-green-800' : 'text-red-800'
                 ]"
               >
@@ -123,7 +131,7 @@
 
             <p
               :class="[
-                'text-center mb-4',
+                'text-center mb-3 md:mb-4 text-sm md:text-base',
                 resultado.valido ? 'text-green-700' : 'text-red-700'
               ]"
             >
@@ -131,31 +139,31 @@
             </p>
 
             <!-- Información del Usuario -->
-            <div v-if="resultado.valido && resultado.datos" class="bg-white rounded-lg p-6 space-y-4">
-              <h3 class="font-bold text-lg text-gray-800 border-b pb-2">
+            <div v-if="resultado.valido && resultado.datos" class="bg-white rounded-lg p-4 md:p-6 space-y-3 md:space-y-4">
+              <h3 class="font-bold text-base md:text-lg text-gray-800 border-b pb-2">
                 👤 Información del Asistente
               </h3>
               
-              <div class="grid grid-cols-2 gap-4 text-sm">
-                <div class="col-span-2 md:col-span-1">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
+                <div class="col-span-1 md:col-span-1">
                   <span class="font-medium text-gray-600">Nombre:</span>
-                  <p class="text-gray-900 font-semibold text-lg">{{ resultado.datos.nombre }}</p>
+                  <p class="text-gray-900 font-semibold text-sm md:text-lg">{{ resultado.datos.nombre }}</p>
                 </div>
                 
-                <div class="col-span-2 md:col-span-1">
+                <div class="col-span-1 md:col-span-1">
                   <span class="font-medium text-gray-600">Correo:</span>
-                  <p class="text-gray-900">{{ resultado.datos.correo }}</p>
+                  <p class="text-gray-900 break-all">{{ resultado.datos.correo }}</p>
                 </div>
 
-                <div v-if="resultado.datos.carrera" class="col-span-2">
+                <div v-if="resultado.datos.carrera" class="col-span-1 md:col-span-2">
                   <span class="font-medium text-gray-600">Carrera:</span>
                   <p class="text-gray-900">{{ resultado.datos.carrera }}</p>
                 </div>
               </div>
 
-              <div class="border-t pt-4">
-                <h4 class="font-bold text-gray-800 mb-3">🎬 Detalles de la Función</h4>
-                <div class="grid grid-cols-2 gap-4 text-sm">
+              <div class="border-t pt-3 md:pt-4">
+                <h4 class="font-bold text-sm md:text-base text-gray-800 mb-2 md:mb-3">🎬 Detalles de la Función</h4>
+                <div class="grid grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
                   <div class="col-span-2">
                     <span class="font-medium text-gray-600">Película:</span>
                     <p class="text-gray-900 font-semibold">{{ resultado.datos.pelicula }}</p>
@@ -177,8 +185,8 @@
                   </div>
 
                   <div>
-                    <span class="font-medium text-gray-600">ID Reserva:</span>
-                    <p class="text-gray-900 text-xs font-mono">{{ resultado.datos.reserva_id }}</p>
+                    <span class="font-medium text-gray-600">ID:</span>
+                    <p class="text-gray-900 text-xs font-mono break-all">{{ resultado.datos.reserva_id }}</p>
                   </div>
                 </div>
               </div>
@@ -189,18 +197,18 @@
             </div>
 
             <!-- Botón de Confirmación -->
-            <div v-if="resultado.valido && !resultado.confirmado" class="mt-6">
+            <div v-if="resultado.valido && !resultado.confirmado" class="mt-4 md:mt-6">
               <button
                 @click="confirmarEntrada"
-                class="w-full bg-green-600 text-white py-4 rounded-lg font-bold text-lg hover:bg-green-700 transition-colors"
+                class="w-full bg-green-600 text-white py-3 md:py-4 rounded-lg font-bold text-base md:text-lg hover:bg-green-700 transition-colors"
               >
                 ✓ CONFIRMAR ENTRADA
               </button>
             </div>
 
-            <div v-if="resultado.confirmado" class="mt-6 bg-green-100 border border-green-300 rounded-lg p-4 text-center">
-              <p class="text-green-800 font-bold">✓ Entrada confirmada exitosamente</p>
-              <p class="text-green-700 text-sm mt-1">
+            <div v-if="resultado.confirmado" class="mt-4 md:mt-6 bg-green-100 border border-green-300 rounded-lg p-3 md:p-4 text-center">
+              <p class="text-green-800 font-bold text-sm md:text-base">✓ Entrada confirmada exitosamente</p>
+              <p class="text-green-700 text-xs md:text-sm mt-1">
                 {{ new Date().toLocaleString('es-ES') }}
               </p>
             </div>
@@ -208,33 +216,35 @@
 
           <button
             @click="resetearEscaneo"
-            class="w-full bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
+            class="w-full bg-[#8B0000] text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-[#A52A2A] transition-colors"
           >
-            🔄 Escanear Otro Código
+            {{ modoEscaneo === 'camara' ? '🔄 Escanear Siguiente' : '🔄 Validar Otro' }}
           </button>
         </div>
 
         <!-- Historial de Escaneos -->
-        <div v-if="historial.length > 0" class="mt-8">
-          <h3 class="text-lg font-bold text-gray-800 mb-4">📋 Historial de Escaneos</h3>
+        <div v-if="historial.length > 0" class="mt-6 md:mt-8">
+          <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3 md:mb-4">📋 Historial de Escaneos</h3>
           <div class="space-y-2">
             <div
               v-for="(item, index) in historial"
               :key="index"
               :class="[
-                'p-4 rounded-lg border text-sm',
+                'p-3 md:p-4 rounded-lg border text-xs md:text-sm',
                 item.valido
                   ? 'bg-green-50 border-green-200'
                   : 'bg-red-50 border-red-200'
               ]"
             >
-              <div class="flex justify-between items-center">
-                <div>
-                  <span class="font-semibold">{{ item.nombre || 'Desconocido' }}</span>
-                  <span class="mx-2">-</span>
-                  <span class="text-gray-600">{{ item.pelicula || 'N/A' }}</span>
+              <div class="flex justify-between items-start gap-2">
+                <div class="flex-1 min-w-0">
+                  <span class="font-semibold block truncate">{{ item.nombre || 'Desconocido' }}</span>
+                  <span class="text-gray-600 block truncate text-xs">{{ item.pelicula || 'N/A' }}</span>
                 </div>
-                <span :class="item.valido ? 'text-green-600' : 'text-red-600'">
+                <span :class="[
+                  'text-lg flex-shrink-0',
+                  item.valido ? 'text-green-600' : 'text-red-600'
+                ]">
                   {{ item.valido ? '✓' : '✗' }}
                 </span>
               </div>
@@ -278,6 +288,15 @@ const resultado = ref<{
 // Historial
 const historial = ref<any[]>([])
 
+// Cambiar modo de escaneo
+const cambiarModo = (modo: 'camara' | 'manual') => {
+  if (escaneando.value) {
+    detenerEscaneo()
+  }
+  modoEscaneo.value = modo
+  resultado.value = null
+}
+
 // Iniciar escaneo con cámara
 const iniciarEscaneo = async () => {
   try {
@@ -306,8 +325,9 @@ const iniciarEscaneo = async () => {
     codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement.value, async (result, error) => {
       if (result) {
         const qrText = result.getText()
-        await procesarQR(qrText)
+        // Detener temporalmente el escaneo para procesar
         detenerEscaneo()
+        await procesarQR(qrText)
       }
 
       // Ignorar errores normales de "no se encontró código"
@@ -483,9 +503,15 @@ const confirmarEntrada = async () => {
 }
 
 // Resetear escaneo
-const resetearEscaneo = () => {
+const resetearEscaneo = async () => {
   resultado.value = null
   qrManual.value = ''
+  
+  // Si estaba en modo cámara, reiniciar el escaneo automáticamente
+  if (modoEscaneo.value === 'camara') {
+    await new Promise(resolve => setTimeout(resolve, 500)) // Pequeño delay
+    await iniciarEscaneo()
+  }
 }
 
 // Agregar al historial
