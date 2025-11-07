@@ -2,13 +2,24 @@
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-3">
-          Cartelera de Películas
-        </h1>
-        <p class="text-lg text-gray-600">
-          Descubre las películas en cartelera
-        </p>
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-12">
+        <div class="text-center md:text-left">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-3">
+            Cartelera de Películas
+          </h1>
+          <p class="text-lg text-gray-600">
+            Descubre las películas en cartelera
+          </p>
+        </div>
+        <RouterLink
+          to="/sugerencia"
+          class="inline-flex items-center justify-center gap-2 bg-[#8B0000] text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:bg-[#A52A2A] hover:scale-105 transition-all duration-200"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+          Crear sugerencia
+        </RouterLink>
       </div>
 
       <!-- Filtros -->
@@ -282,7 +293,7 @@ const cargarPeliculas = async () => {
     const { data, error: supabaseError } = await supabase
       .from('peliculas')
       .select('*')
-      .order('fecha_inicio', { ascending: false })
+      .order('titulo', { ascending: true })
 
     if (supabaseError) throw supabaseError
 

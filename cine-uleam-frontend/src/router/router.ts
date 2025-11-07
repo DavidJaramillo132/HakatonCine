@@ -4,6 +4,7 @@ import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import AdminCartelera from '../components/AdminCartelera.vue';
 import Cartelera from '../components/Cartelera.vue';
+import Sugerencia from '../components/Sugerencia.vue';
 const routes = [
   { 
     path: '/', 
@@ -29,6 +30,11 @@ const routes = [
     path: '/cartelera', 
     name: 'Cartelera',
     component: Cartelera
+  },
+  {
+    path: '/sugerencia',
+    name: 'Sugerencia',
+    component: Sugerencia
   }
 ]
 
