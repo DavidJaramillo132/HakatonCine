@@ -45,6 +45,14 @@
                                 Sugerencia
                             </router-link>
                         </li>
+                        <li v-if="isStudent">
+                            <router-link 
+                                to="/encuestas" 
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Encuestas
+                            </router-link>
+                        </li>
                         <li v-if="!isAuthenticated">
                             <router-link 
                                 to="/login" 
@@ -129,6 +137,15 @@
                             class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
                         >
                             Sugerencia
+                        </router-link>
+                    </li>
+                    <li v-if="isStudent">
+                        <router-link 
+                            to="/encuestas" 
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Encuestas
                         </router-link>
                     </li>
                     <li v-if="!isAuthenticated">
