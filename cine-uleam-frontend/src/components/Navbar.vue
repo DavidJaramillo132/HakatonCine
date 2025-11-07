@@ -53,6 +53,20 @@
                                 Sugerencia
                             </router-link>
                         </li>
+                        <li v-if="isAuthenticated">
+                            <router-link 
+                                to="/alquiler-sala" 
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Alquiler de Sala
+                        <li v-if="isStudent">
+                            <router-link 
+                                to="/encuestas" 
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Encuestas
+                            </router-link>
+                        </li>
                         <li v-if="!isAuthenticated">
                             <router-link 
                                 to="/login" 
@@ -148,6 +162,22 @@
                             Sugerencia
                         </router-link>
                     </li>
+                    <li v-if="isAuthenticated">
+                        <router-link 
+                            to="/alquiler-sala" 
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Alquiler de Sala
+                    <li v-if="isStudent">
+                        <router-link 
+                            to="/encuestas" 
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Encuestas
+                        </router-link>
+                    </li>
                     <li v-if="!isAuthenticated">
                         <router-link 
                             to="/login" 
@@ -240,11 +270,33 @@ const updateAuthState = async () => {
 }
 
 const handleLogout = async () => {
-    await supabase.auth.signOut()
+    try {
+        // Verificar si hay una sesión activa antes de intentar cerrar sesión
+        const { data: { session } } = await supabase.auth.getSession()
+        
+        if (session) {
+            // Solo intentar logout si hay una sesión activa
+            const { error } = await supabase.auth.signOut({ scope: 'local' })
+            if (error && error.message !== 'Auth session missing!') {
+                console.warn('Error al cerrar sesión en el servidor:', error)
+            }
+        }
+    } catch (err) {
+        // Ignorar errores de sesión faltante y continuar con el logout local
+        if (err instanceof Error && !err.message.includes('Auth session missing')) {
+            console.warn('Error al cerrar sesión:', err)
+        }
+    }
+    
+    // Limpiar datos locales siempre (incluso si no había sesión)
     localStorage.removeItem('userId')
     localStorage.removeItem('userRole')
     localStorage.removeItem('userName')
-    await updateAuthState()
+    
+    // Actualizar estado y redirigir
+    isAuthenticated.value = false
+    userRole.value = null
+    userName.value = ''
     router.push('/login')
 }
 

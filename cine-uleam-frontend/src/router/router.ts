@@ -3,8 +3,11 @@ import Home from '../components/Home.vue';
 import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import AdminCartelera from '../components/AdminCartelera.vue';
+import AdminDashboard from '../components/AdminDashboard.vue';
+import AdminEncuestas from '../components/AdminEncuestas.vue';
 import Cartelera from '../components/Cartelera.vue';
 import Sugerencia from '../components/Sugerencia.vue';
+import EncuestasEstudiante from '../components/EncuestasEstudiante.vue';
 import GeneradorQR from '../components/GeneradorQR.vue';
 import EscanerQR from '../components/EscanerQR.vue';
 import AdminSecretRegister from '../components/AdminSecretRegister.vue';
@@ -13,6 +16,7 @@ import ForgotPassword from '../components/ForgotPassword.vue';
 import Proximas from '../components/Proximas.vue';
 import Contacto from '../components/Contacto.vue';
 import AcercaDe from '../components/AcercaDe.vue';
+import AlquilerSala from '../components/AlquilerSala.vue';
 import { supabase } from '../lib/connectSupabase';
 
 const routes = [
@@ -60,12 +64,14 @@ const routes = [
   {
     path: '/admin',
     name: 'AdminDashboard',
-    component: AdminCartelera,
+    component: AdminDashboard,
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/admin/cartelera',
-    redirect: '/admin'
+    name: 'AdminCartelera',
+    component: AdminCartelera,
+    meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
     path: '/admin-secret-register',
@@ -78,6 +84,18 @@ const routes = [
     name: 'AdminNotificaciones',
     component: AdminNotificaciones,
     meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/encuestas',
+    name: 'AdminEncuestas',
+    component: AdminEncuestas,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/encuestas',
+    name: 'EncuestasEstudiante',
+    component: EncuestasEstudiante,
+    meta: { requiresAuth: true, requiresStudent: true }
   },
   {
     path: '/forgot-password',
@@ -99,6 +117,12 @@ const routes = [
     path: '/acerca-de',
     name: 'AcercaDe',
     component: AcercaDe
+  },
+  {
+    path: '/alquiler-sala',
+    name: 'AlquilerSala',
+    component: AlquilerSala,
+    meta: { requiresAuth: true }
   }
 ];
 
