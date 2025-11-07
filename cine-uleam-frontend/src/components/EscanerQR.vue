@@ -35,7 +35,7 @@
         <!-- Modo Cámara -->
         <div v-if="modoEscaneo === 'camara'" class="space-y-4 md:space-y-6">
           <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4 text-xs md:text-sm text-blue-800">
-            <p class="font-medium mb-1 md:mb-0">💡 Instrucciones:</p>
+            <p class="font-medium mb-1 md:mb-0">Instrucciones:</p>
             <ul class="list-disc list-inside space-y-0.5 md:space-y-1 text-xs md:text-sm">
               <li>Permite el acceso a la cámara</li>
               <li>Apunta hacia el código QR</li>
@@ -218,13 +218,13 @@
             @click="resetearEscaneo"
             class="w-full bg-[#8B0000] text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-[#A52A2A] transition-colors"
           >
-            {{ modoEscaneo === 'camara' ? '🔄 Escanear Siguiente' : '🔄 Validar Otro' }}
+            {{ modoEscaneo === 'camara' ? 'Escanear Siguiente' : 'Validar Otro' }}
           </button>
         </div>
 
         <!-- Historial de Escaneos -->
         <div v-if="historial.length > 0" class="mt-6 md:mt-8">
-          <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3 md:mb-4">📋 Historial de Escaneos</h3>
+          <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3 md:mb-4">Historial de Escaneos</h3>
           <div class="space-y-2">
             <div
               v-for="(item, index) in historial"
@@ -423,7 +423,7 @@ const procesarQR = async (qrText: string) => {
     if (ticketData.estado === 'usado') {
       resultado.value = {
         valido: false,
-        mensaje: '⚠️ Este código QR ya ha sido utilizado'
+        mensaje: 'Este código QR ya ha sido utilizado'
       }
       
       agregarAlHistorial({
@@ -438,7 +438,7 @@ const procesarQR = async (qrText: string) => {
     if (ticketData.estado === 'expirado') {
       resultado.value = {
         valido: false,
-        mensaje: '⚠️ Este código QR ha expirado'
+        mensaje: 'Este código QR ha expirado'
       }
       
       agregarAlHistorial({
@@ -471,6 +471,14 @@ const procesarQR = async (qrText: string) => {
       valido: false,
       mensaje: 'Error al procesar el código QR'
     }
+    
+    // Agregar al historial también cuando hay error
+    agregarAlHistorial({
+      valido: false,
+      nombre: 'Error',
+      pelicula: 'Error de procesamiento',
+      timestamp: new Date().toISOString()
+    })
   }
 }
 
