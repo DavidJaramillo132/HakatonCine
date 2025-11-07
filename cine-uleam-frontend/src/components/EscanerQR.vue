@@ -251,7 +251,9 @@
 
 <script setup lang="ts">
 import { ref, onUnmounted } from 'vue'
-import { BrowserQRCodeReader } from '@zxing/browser'
+//import { BrowserQRCodeReader } from '@zxing/browser'
+import { BrowserMultiFormatReader } from '@zxing/browser'
+
 import { supabase } from '../lib/connectSupabase'
 
 // Referencias
@@ -261,8 +263,9 @@ const escaneando = ref(false)
 const qrManual = ref('')
 
 // Escáner
-let codeReader: BrowserQRCodeReader | null = null
-let stream: MediaStream | null = null
+//let codeReader: BrowserQRCodeReader | null = null
+let codeReader: BrowserMultiFormatReader | null = null
+let videoStream: MediaStream | null = null
 
 // Resultado
 const resultado = ref<{
@@ -279,34 +282,38 @@ const historial = ref<any[]>([])
 const iniciarEscaneo = async () => {
   try {
     escaneando.value = true
-    codeReader = new BrowserQRCodeReader()
+    codeReader = new BrowserMultiFormatReader()
 
     // Obtener dispositivos de video
-    const videoInputDevices = await codeReader.listVideoInputDevices()
-    
-    if (videoInputDevices.length === 0) {
+    const videoInputDevices = await BrowserMultiFormatReader.listVideoInputDevices()
+
+    if (!videoInputDevices || videoInputDevices.length === 0) {
       throw new Error('No se encontró ninguna cámara')
     }
 
     // Usar la primera cámara disponible
-    const selectedDeviceId = videoInputDevices[0].deviceId
+    const selectedDevice = videoInputDevices[0]
+    if (!selectedDevice) throw new Error('No se encontró un dispositivo de cámara válido')
+
+    const selectedDeviceId = selectedDevice.deviceId
+
+    // Verificar que el elemento <video> exista
+    if (!videoElement.value) {
+      throw new Error('Elemento de video no inicializado')
+    }
 
     // Iniciar escaneo continuo
-    codeReader.decodeFromVideoDevice(
-      selectedDeviceId,
-      videoElement.value!,
-      async (result, error) => {
-        if (result) {
-          const qrText = result.getText()
-          await procesarQR(qrText)
-          detenerEscaneo()
-        }
-        
-        if (error && !(error.name === 'NotFoundException')) {
-          console.error('Error en el escaneo:', error)
-        }
+    codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement.value, async (result, error) => {
+      if (result) {
+        const qrText = result.getText()
+        await procesarQR(qrText)
+        detenerEscaneo()
       }
-    )
+
+      if (error && error.name !== 'NotFoundException') {
+        console.error('Error en el escaneo:', error)
+      }
+    })
   } catch (error) {
     console.error('Error iniciando escaneo:', error)
     alert('Error al acceder a la cámara: ' + (error as Error).message)
@@ -317,11 +324,17 @@ const iniciarEscaneo = async () => {
 // Detener escaneo
 const detenerEscaneo = () => {
   if (codeReader) {
-    codeReader.reset()
+    // Detener el stream de video manualmente
+    if (videoElement.value && videoElement.value.srcObject) {
+      const stream = videoElement.value.srcObject as MediaStream
+      stream.getTracks().forEach((track: MediaStreamTrack) => track.stop())
+      videoElement.value.srcObject = null
+    }
   }
   
-  if (stream) {
-    stream.getTracks().forEach(track => track.stop())
+  if (videoStream) {
+    videoStream.getTracks().forEach((track: MediaStreamTrack) => track.stop())
+    videoStream = null
   }
   
   escaneando.value = false
