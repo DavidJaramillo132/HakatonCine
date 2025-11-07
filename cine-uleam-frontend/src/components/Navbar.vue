@@ -37,7 +37,7 @@
                                 Cartelera
                             </router-link>
                         </li>
-                        <li>
+                        <li v-if="isStudent">
                             <router-link 
                                 to="/sugerencia" 
                                 class="hover:text-yellow-400 transition-colors duration-200 font-medium"
@@ -45,7 +45,7 @@
                                 Sugerencia
                             </router-link>
                         </li>
-                        <li>
+                        <li v-if="!isAuthenticated">
                             <router-link 
                                 to="/login" 
                                 class="hover:text-yellow-400 transition-colors duration-200 font-medium"
@@ -122,7 +122,7 @@
                             Cartelera
                         </router-link>
                     </li>
-                    <li>
+                    <li v-if="isStudent">
                         <router-link 
                             to="/sugerencia" 
                             @click="closeMenu"
@@ -131,7 +131,7 @@
                             Sugerencia
                         </router-link>
                     </li>
-                    <li>
+                    <li v-if="!isAuthenticated">
                         <router-link 
                             to="/login" 
                             @click="closeMenu"
@@ -251,6 +251,7 @@ onUnmounted(() => {
 const dashboardRoute = computed(() => (userRole.value === 'admin' ? '/admin' : '/cartelera'))
 const dashboardLabel = computed(() => (userRole.value === 'admin' ? 'Panel Admin' : 'Cartelera'))
 const displayName = computed(() => userName.value || 'Usuario')
+const isStudent = computed(() => userRole.value === 'estudiante')
 
 </script>
 

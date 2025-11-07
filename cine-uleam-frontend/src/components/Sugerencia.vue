@@ -423,9 +423,15 @@ const enviarSugerencia = async () => {
 
   const usuarioId = localStorage.getItem('userId')
   const usuarioNombre = localStorage.getItem('userName') || 'Usuario'
+  const usuarioRol = localStorage.getItem('userRole')
 
   if (!usuarioId) {
     formError.value = 'Necesitas iniciar sesión con tu cuenta institucional para enviar una sugerencia.'
+    return
+  }
+
+  if (usuarioRol !== 'estudiante') {
+    formError.value = 'Solo los estudiantes pueden enviar sugerencias.'
     return
   }
 
@@ -439,6 +445,8 @@ const enviarSugerencia = async () => {
   enviando.value = true
 
   try {
+    const comentario = mensaje.value.trim()
+
     const { data: admins, error: adminError } = await supabase
       .from('usuarios')
       .select('id, nombre')
@@ -454,7 +462,7 @@ const enviarSugerencia = async () => {
       `Película sugerida: ${peliculaSeleccionada.titulo}`,
       peliculaSeleccionada.genero ? `Género: ${peliculaSeleccionada.genero}` : null,
       peliculaSeleccionada.clasificacion ? `Clasificación: ${peliculaSeleccionada.clasificacion}` : null,
-      mensaje.value.trim() ? `Comentario del estudiante: ${mensaje.value.trim()}` : 'Sin comentario adicional.',
+      comentario ? `Comentario del estudiante: ${comentario}` : 'Sin comentario adicional.',
       `Enviada por: ${usuarioNombre}`
     ]
       .filter(Boolean)
@@ -462,17 +470,17 @@ const enviarSugerencia = async () => {
 
     const registros = admins.map(admin => ({
       usuario_id: admin.id,
-      titulo: `Sugerencia de película`,
+      titulo: 'Sugerencia de película',
       mensaje: mensajeNotificacion,
       tipo: 'sugerencia',
       leida: false
     }))
 
-    const { error: insertError } = await supabase
+    const { error: notificacionError } = await supabase
       .from('notificaciones')
       .insert(registros)
 
-    if (insertError) throw insertError
+    if (notificacionError) throw notificacionError
 
     formSuccess.value = '¡Listo! Tu sugerencia fue enviada al equipo administrador.'
     mensaje.value = ''

@@ -5,8 +5,6 @@ import Register from '../components/Register.vue';
 import AdminCartelera from '../components/AdminCartelera.vue';
 import Cartelera from '../components/Cartelera.vue';
 import Sugerencia from '../components/Sugerencia.vue';
-//import ForgotPassword from '../components/ForgotPassword.vue';
-//import ResetPassword from '../components/ResetPassword.vue';
 import GeneradorQR from '../components/GeneradorQR.vue';
 import EscanerQR from '../components/EscanerQR.vue';
 import AdminSecretRegister from '../components/AdminSecretRegister.vue';
@@ -30,63 +28,17 @@ const routes = [
     component: Register,
     meta: { requiresGuest: true }
   },
-  { 
-    path: '/AdminCartelera', 
-    name: 'AdminCartelera',
-    component: AdminCartelera
-  },
-  // { 
-  //   path: '/forgot-password', 
-  //   name: 'ForgotPassword',
-  //   component: ForgotPassword
-  // },
-  // { 
-  //   path: '/reset-password', 
-  //   name: 'ResetPassword',
-  //   component: ResetPassword
-  // },
-  { 
-    path: '/AdminRegister', 
-    name: 'AdminRegister',
-    component: AdminCartelera
-  },
-  { 
-    path: '/cartelera', 
-    name: 'Cartelera',
-    component: Cartelera
-  },
-  {
-    path: '/sugerencia',
-    name: 'Sugerencia',
-    component: Sugerencia
-  },
-  { 
-    path: '/generar-qr', 
-    name: 'GeneradorQR',
-    component: GeneradorQR
-  },
-  {
-    path: '/admin-secret-register',
-    name: 'AdminSecretRegister',
-    component: AdminSecretRegister
-  },
-  {
-    path: '/sugerencia',
-    name: 'Sugerencia',
-    component: Sugerencia
-  },
-  {
-    path: '/admin',
-    alias: ['/AdminRegister'],
-    name: 'AdminDashboard',
-    component: AdminCartelera,
-    meta: { requiresAuth: true, requiresAdmin: true }
-  },
   {
     path: '/cartelera',
     name: 'Cartelera',
     component: Cartelera,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/sugerencia',
+    name: 'Sugerencia',
+    component: Sugerencia,
+    meta: { requiresAuth: true, requiresStudent: true }
   },
   {
     path: '/generar-qr',
@@ -99,6 +51,22 @@ const routes = [
     name: 'EscanerQR',
     component: EscanerQR,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/admin',
+    name: 'AdminDashboard',
+    component: AdminCartelera,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/admin/cartelera',
+    redirect: '/admin'
+  },
+  {
+    path: '/admin-secret-register',
+    name: 'AdminSecretRegister',
+    component: AdminSecretRegister,
+    meta: { requiresAuth: true, requiresAdmin: true }
   }
 ];
 
@@ -138,7 +106,17 @@ router.beforeEach(async (to, _from, next) => {
     }
 
     if (metadataRole !== 'admin') {
-      return next('/cartelera');
+      return next(metadataRole === 'estudiante' ? '/cartelera' : '/');
+    }
+  }
+
+  if (to.meta?.requiresStudent) {
+    if (!isAuthenticated) {
+      return next({ path: '/login', query: { redirect: to.fullPath } });
+    }
+
+    if (metadataRole !== 'estudiante') {
+      return next(metadataRole === 'admin' ? '/admin' : '/');
     }
   }
 
