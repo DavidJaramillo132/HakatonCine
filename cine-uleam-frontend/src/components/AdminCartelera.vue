@@ -201,31 +201,7 @@
                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
                     />
                   </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
-                    <input
-                      v-model="formPelicula.fecha_inicio"
-                      type="date"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
-                    <input
-                      v-model="formPelicula.fecha_fin"
-                      type="date"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
-                    />
-                  </div>
-                  <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Horarios *</label>
-                    <textarea
-                      v-model="formPelicula.horarios"
-                      rows="4"
-                      required
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
-                    ></textarea>
-                  </div>
+            
                   <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Sinopsis *</label>
                     <textarea
@@ -257,20 +233,44 @@
             <!-- Lista de Películas -->
             <div>
               <h3 class="text-lg font-semibold text-gray-800 mb-4">Cartelera Actual</h3>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              
+              <!-- Indicador de carga -->
+              <div v-if="isLoadingPeliculas" class="flex justify-center items-center py-12">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8B0000]"></div>
+                <p class="ml-4 text-gray-600">Cargando películas...</p>
+              </div>
+              
+              <!-- Mensaje cuando no hay películas -->
+              <div v-else-if="peliculas.length === 0" class="bg-blue-50 border border-blue-200 rounded-lg p-8 text-center">
+                <svg class="mx-auto h-12 w-12 text-blue-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                </svg>
+                <h3 class="text-lg font-semibold text-gray-700 mb-2">No hay películas en la cartelera</h3>
+                <p class="text-gray-600 mb-4">Agrega tu primera película usando el formulario de arriba</p>
+                <button
+                  @click="modoAgregar = 'api'; activeTab = 'peliculas'"
+                  class="bg-[#8B0000] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#A52A2A] transition-colors"
+                >
+                  Agregar Película
+                </button>
+              </div>
+              
+              <!-- Grid de películas -->
+              <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div
                   v-for="pelicula in peliculas"
                   :key="pelicula.id"
                   class="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-shadow"
                 >
                   <img
-                    :src="pelicula.poster_url || 'https://via.placeholder.com/300x450'"
+                    :src="pelicula.poster_url || 'https://via.placeholder.com/300x450?text=Sin+Poster'"
                     :alt="pelicula.titulo"
                     class="w-full h-64 object-cover"
+                    @error="(e) => (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x450?text=Sin+Poster'"
                   />
                   <div class="p-4">
                     <h4 class="font-bold text-lg text-gray-800">{{ pelicula.titulo }}</h4>
-                    <p class="text-sm text-gray-600 mt-1">{{ pelicula.duracion_min }} min</p>
+                    <p class="text-sm text-gray-600 mt-1">{{ pelicula.duracion_min }} min • {{ pelicula.clasificacion }}</p>
                     <p class="text-sm text-gray-500 mt-1">{{ pelicula.genero }}</p>
                     <p class="text-sm text-gray-700 mt-2 line-clamp-2">{{ pelicula.sinopsis }}</p>
                     
@@ -279,13 +279,13 @@
                         @click="editarPelicula(pelicula)"
                         class="flex-1 bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
                       >
-                        Editar
+                        ✏️ Editar
                       </button>
                       <button
                         @click="eliminarPelicula(pelicula.id)"
                         class="flex-1 bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
                       >
-                        Eliminar
+                        🗑️ Eliminar
                       </button>
                     </div>
                   </div>
@@ -382,9 +382,9 @@
                     <div class="flex-1">
                       <h4 class="font-bold text-gray-800">{{ obtenerTituloPelicula(funcion.pelicula_id) }}</h4>
                       <div class="flex gap-4 mt-2 text-sm text-gray-600">
-                        <span>📅 {{ formatearFecha(funcion.fecha) }}</span>
-                        <span>🕐 {{ funcion.hora_inicio }} - {{ funcion.hora_fin }}</span>
-                        <span>🎭 {{ obtenerNombreSala(funcion.sala_id) }}</span>
+                        <span>{{ formatearFecha(funcion.fecha) }}</span>
+                        <span>{{ funcion.hora_inicio }} - {{ funcion.hora_fin }}</span>
+                        <span>{{ obtenerNombreSala(funcion.sala_id) }}</span>
                       </div>
                     </div>
                     <div class="flex gap-2">
@@ -418,6 +418,7 @@ const activeTab = ref('peliculas')
 const modoAgregar = ref<'api' | 'manual'>('api')
 const searchQuery = ref('')
 const isSearching = ref(false)
+const isLoadingPeliculas = ref(true)
 const resultadosBusqueda = ref<any[]>([])
 const peliculaSeleccionada = ref(false)
 const errorHorario = ref('')
@@ -472,16 +473,26 @@ onMounted(async () => {
 // Cargar películas desde Supabase
 const cargarPeliculas = async () => {
   try {
+    isLoadingPeliculas.value = true
+    console.log('Cargando películas...')
     const { data, error } = await supabase
       .from('peliculas')
       .select('*')
       .order('creada_en', { ascending: false })
 
-    if (error) throw error
+    if (error) {
+      console.error('Error de Supabase:', error)
+      throw error
+    }
+    
+    console.log('Películas cargadas:', data)
     peliculas.value = data || []
+    console.log('Total de películas:', peliculas.value.length)
   } catch (error) {
     console.error('Error cargando películas:', error)
-    alert('Error al cargar películas')
+    alert('Error al cargar películas: ' + (error as Error).message)
+  } finally {
+    isLoadingPeliculas.value = false
   }
 }
 
