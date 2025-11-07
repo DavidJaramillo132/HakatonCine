@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 max-w-4xl">
       <div class="bg-white rounded-xl shadow-lg p-8">
         <h1 class="text-3xl font-bold text-[#8B0000] mb-6 text-center">
-          📷 Escáner de QR - Validación de Entrada
+          Escáner de QR - Validación de Entrada
         </h1>
 
         <!-- Opciones de Escaneo -->
@@ -28,14 +28,14 @@
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             ]"
           >
-            ⌨️ Ingreso Manual
+            Ingreso Manual
           </button>
         </div>
 
         <!-- Modo Cámara -->
         <div v-if="modoEscaneo === 'camara'" class="space-y-6">
           <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-            <p class="font-medium">💡 Instrucciones:</p>
+            <p class="font-medium">Instrucciones:</p>
             <ul class="list-disc list-inside mt-2 space-y-1">
               <li>Permite el acceso a la cámara cuando se solicite</li>
               <li>Apunta la cámara hacia el código QR</li>
@@ -64,7 +64,7 @@
               @click="iniciarEscaneo"
               class="flex-1 bg-[#8B0000] text-white py-3 rounded-lg font-semibold hover:bg-[#A52A2A] transition-colors"
             >
-              ▶️ Iniciar Escaneo
+              Iniciar Escaneo
             </button>
             <button
               v-else
@@ -310,7 +310,9 @@ const iniciarEscaneo = async () => {
         detenerEscaneo()
       }
 
-      if (error && error.name !== 'NotFoundException') {
+      // Ignorar errores normales de "no se encontró código"
+      // Solo registrar errores reales de la cámara o del sistema
+      if (error && !error.message.includes('No MultiFormat Readers') && error.name !== 'NotFoundException') {
         console.error('Error en el escaneo:', error)
       }
     })

@@ -26,6 +26,14 @@
                                 {{ dashboardLabel }}
                             </router-link>
                         </li>
+                        <li v-if="userRole === 'admin'">
+                            <router-link 
+                                to="/escanear-qr"
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Escáner QR
+                            </router-link>
+                        </li>
                         <li v-if="isAuthenticated" class="text-sm text-yellow-200 font-semibold">
                             ¡Hola, {{ displayName }}!
                         </li>
@@ -108,6 +116,15 @@
                             class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
                         >
                             {{ dashboardLabel }}
+                        </router-link>
+                    </li>
+                    <li v-if="userRole === 'admin'">
+                        <router-link 
+                            to="/escanear-qr"
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Escáner QR
                         </router-link>
                     </li>
                     <li v-if="isAuthenticated" class="text-sm text-yellow-200 font-semibold">
