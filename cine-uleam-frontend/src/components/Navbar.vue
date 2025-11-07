@@ -20,6 +20,22 @@
                         </li>
                         <li>
                             <router-link 
+                                to="/cartelera" 
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Cartelera
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link 
+                                to="/sugerencia" 
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Sugerencia
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link 
                                 to="/login" 
                                 class="hover:text-yellow-400 transition-colors duration-200 font-medium"
                             >
@@ -64,6 +80,24 @@
                             class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
                         >
                             Inicio
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link 
+                            to="/cartelera" 
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Cartelera
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link 
+                            to="/sugerencia" 
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Sugerencia
                         </router-link>
                     </li>
                     <li>

@@ -33,7 +33,7 @@
                 type="email"
                 required
                 class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent transition duration-200"
-                placeholder="ejemplo@uleam.edu.ec"
+                placeholder="ejemplo@live.uleam.edu.ec"
               />
             </div>
           </div>
@@ -89,9 +89,9 @@
           </div>
 
           <div class="text-sm">
-            <a href="#" class="font-medium text-[#8B0000] hover:text-[#A52A2A] transition duration-200">
+            <router-link to="/forgot-password" class="font-medium text-[#8B0000] hover:text-[#A52A2A] transition duration-200">
               ¿Olvidaste tu contraseña?
-            </a>
+            </router-link>
           </div>
         </div>
 

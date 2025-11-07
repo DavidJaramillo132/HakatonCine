@@ -53,7 +53,7 @@
                 type="email"
                 required
                 class="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#8B0000] focus:border-transparent transition duration-200"
-                placeholder="ejemplo@uleam.edu.ec"
+                placeholder="ejemplo@live.uleam.edu.ec"
               />
             </div>
           </div>
@@ -155,6 +155,11 @@
           </div>
         </div>
 
+        <!-- Success Message -->
+        <div v-if="successMessage" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+          ✅ {{ successMessage }}
+        </div>
+
         <!-- Error Message -->
         <div v-if="errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
           <p class="text-sm">{{ errorMessage }}</p>
@@ -195,7 +200,6 @@ const router = useRouter()
 const formData = reactive({
   fullName: '',
   email: '',
-  phone: '',
   password: '',
   confirmPassword: '',
   acceptTerms: false
@@ -205,6 +209,7 @@ const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const isLoading = ref(false)
 const errorMessage = ref('')
+const successMessage = ref('')
 
 const togglePassword = () => {
   showPassword.value = !showPassword.value
@@ -222,7 +227,7 @@ const isFormValid = computed(() => {
   return (
     formData.fullName.length > 0 &&
     formData.email.length > 0 &&
-    formData.phone.length > 0 &&
+    formData.email.endsWith('@live.uleam.edu.ec') &&
     formData.password.length >= 6 &&
     formData.password === formData.confirmPassword &&
     formData.acceptTerms
@@ -235,14 +240,14 @@ const handleRegister = async () => {
   }
 
   // Validar formato de correo institucional
-  const emailRegex = /^e\d+@live\.uleam\.edu\.ec$/
-  if (!emailRegex.test(formData.email)) {
-    errorMessage.value = 'Debes usar tu correo institucional: e<código>@live.uleam.edu.ec'
+  if (!formData.email.endsWith('@live.uleam.edu.ec')) {
+    errorMessage.value = 'Debe usar su correo institucional (@live.uleam.edu.ec)'
     return
   }
 
   isLoading.value = true
   errorMessage.value = ''
+  successMessage.value = ''
 
   try {
     // 1. Registrar usuario en Supabase Auth
@@ -251,34 +256,51 @@ const handleRegister = async () => {
       password: formData.password,
       options: {
         data: {
-          full_name: formData.fullName,
-          phone: formData.phone
-        }
+          full_name: formData.fullName
+        },
+        emailRedirectTo: `${window.location.origin}/cartelera`
       }
     })
 
     if (authError) throw authError
 
     if (authData.user) {
-      // 2. Crear registro en tabla usuarios
-      const { error: userError } = await supabase
+      // El trigger handle_new_user() crea automáticamente el registro en la tabla usuarios
+      // Esperar un momento para que el trigger se ejecute
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Verificar que el usuario fue creado correctamente en la tabla usuarios
+      const { data: usuario, error: userError } = await supabase
         .from('usuarios')
-        .insert({
-          id: authData.user.id,
-          nombre: formData.fullName,
-          correo: formData.email,
-          rol: 'estudiante',
-          carrera: '' // Se puede agregar campo en el formulario
-        })
+        .select('*')
+        .eq('id', authData.user.id)
+        .single()
 
-      if (userError) throw userError
+      if (userError) {
+        console.error('Error al verificar usuario:', userError)
+        // Continuar de todas formas, el trigger debería haber creado el usuario
+      }
 
-      // 3. Login automático y redirección
-      localStorage.setItem('userId', authData.user.id)
-      localStorage.setItem('role', 'estudiante')
-      localStorage.setItem('userName', formData.fullName)
+      // Guardar información en localStorage
+      if (usuario) {
+        localStorage.setItem('userId', usuario.id)
+        localStorage.setItem('userRole', usuario.rol)
+        localStorage.setItem('userName', usuario.nombre)
+      } else {
+        localStorage.setItem('userId', authData.user.id)
+        localStorage.setItem('userRole', 'estudiante')
+        localStorage.setItem('userName', formData.fullName)
+      }
 
-      router.push('/cartelera')
+      // Mostrar mensaje de éxito
+      successMessage.value = '¡Cuenta creada exitosamente!'
+      
+      // Redirigir a la cartelera
+      setTimeout(() => {
+        router.push('/cartelera')
+      }, 1000)
+    } else {
+      errorMessage.value = 'No se pudo crear la cuenta. Por favor, intenta nuevamente.'
     }
   } catch (error: any) {
     console.error('Error en registro:', error)
