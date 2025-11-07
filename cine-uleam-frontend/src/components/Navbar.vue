@@ -31,6 +31,22 @@
                         </li>
                         <li v-if="!isAuthenticated">
                             <router-link 
+                                to="/cartelera" 
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Cartelera
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link 
+                                to="/sugerencia" 
+                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            >
+                                Sugerencia
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link 
                                 to="/login" 
                                 class="hover:text-yellow-400 transition-colors duration-200 font-medium"
                             >
@@ -98,6 +114,24 @@
                         ¡Hola, {{ displayName }}!
                     </li>
                     <li v-if="!isAuthenticated">
+                        <router-link 
+                            to="/cartelera" 
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Cartelera
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link 
+                            to="/sugerencia" 
+                            @click="closeMenu"
+                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                        >
+                            Sugerencia
+                        </router-link>
+                    </li>
+                    <li>
                         <router-link 
                             to="/login" 
                             @click="closeMenu"
