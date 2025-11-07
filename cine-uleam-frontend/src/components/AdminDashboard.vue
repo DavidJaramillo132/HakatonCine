@@ -190,27 +190,7 @@
           </div>
         </div>
 
-        <!-- Gráfico de películas más populares -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Películas Más Populares</h3>
-          <div class="space-y-4">
-            <div v-for="pelicula in datosGraficoPeliculas" :key="pelicula.nombre" class="space-y-2">
-              <div class="flex justify-between text-sm">
-                <span class="font-medium text-gray-700">{{ pelicula.nombre }}</span>
-                <span class="text-gray-600">{{ pelicula.asientosOcupados }} asientos ({{ pelicula.funcionesTotal }} funciones)</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-8">
-                <div
-                  :style="{ width: pelicula.porcentaje + '%' }"
-                  class="h-8 rounded-full flex items-center justify-end pr-3 text-white text-xs font-semibold transition-all duration-500 bg-gradient-to-r from-purple-500 to-pink-500"
-                >
-                  <span v-if="parseFloat(pelicula.porcentaje) > 10">{{ pelicula.porcentaje }}%</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        
         <!-- Tabla de datos detallados -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden">
           <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
