@@ -207,13 +207,76 @@
                     />
                   </div>
                   <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">URL del Póster</label>
-                    <input
-                      v-model="formPelicula.poster_url"
-                      type="url"
-                      placeholder="https://..."
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
-                    />
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Póster de la Película</label>
+                    <div class="space-y-3">
+                      <!-- Opciones de póster (solo mostrar subida si es admin) -->
+                      <div class="flex gap-4">
+                        <button
+                          v-if="userRole === 'admin'"
+                          type="button"
+                          @click="tipoPoster = 'upload'"
+                          :class="[
+                            'flex-1 py-2 px-4 rounded-lg font-medium transition-all text-sm',
+                            tipoPoster === 'upload'
+                              ? 'bg-[#8B0000] text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          ]"
+                        >
+                          📤 Subir Imagen
+                        </button>
+                        <button
+                          type="button"
+                          @click="tipoPoster = 'url'"
+                          :class="[
+                            userRole === 'admin' ? 'flex-1' : 'w-full',
+                            'py-2 px-4 rounded-lg font-medium transition-all text-sm',
+                            tipoPoster === 'url'
+                              ? 'bg-[#8B0000] text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          ]"
+                        >
+                          🔗 URL de Imagen
+                        </button>
+                      </div>
+
+                      <!-- Subir archivo (solo admin) -->
+                      <div v-if="tipoPoster === 'upload' && userRole === 'admin'" class="space-y-2">
+                        <input
+                          type="file"
+                          @change="handleFileChange"
+                          accept="image/*"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#8B0000] file:text-white hover:file:bg-[#A52A2A]"
+                        />
+                        <div v-if="subiendoImagen" class="flex items-center gap-2 text-sm text-blue-600">
+                          <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                          <span>Subiendo imagen... {{ progresoSubida }}%</span>
+                        </div>
+                        <div v-if="archivoSeleccionado" class="text-sm text-gray-600">
+                          📎 {{ archivoSeleccionado.name }} ({{ (archivoSeleccionado.size / 1024).toFixed(2) }} KB)
+                        </div>
+                      </div>
+
+                      <!-- URL manual -->
+                      <div v-if="tipoPoster === 'url'">
+                        <input
+                          v-model="formPelicula.poster_url"
+                          type="url"
+                          placeholder="https://ejemplo.com/imagen.jpg"
+                          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
+                        />
+                      </div>
+
+                      <!-- Vista previa -->
+                      <div v-if="formPelicula.poster_url || vistaPrevia" class="mt-3">
+                        <p class="text-sm font-medium text-gray-700 mb-2">Vista previa:</p>
+                        <img
+                          :src="vistaPrevia || formPelicula.poster_url"
+                          alt="Vista previa del póster"
+                          class="w-48 h-64 object-cover rounded-lg border border-gray-300"
+                          @error="(e) => (e.target as HTMLImageElement).src = 'https://via.placeholder.com/300x450?text=Error+al+cargar'"
+                        />
+                      </div>
+                    </div>
                   </div>
             
                   <div class="md:col-span-2">
@@ -430,14 +493,22 @@ import type { Sala } from '../interface/ISala'
 // Estados
 const activeTab = ref('peliculas')
 const modoAgregar = ref<'api' | 'manual'>('api')
+const tipoPoster = ref<'upload' | 'url'>('url')
 const searchQuery = ref('')
 const isSearching = ref(false)
 const isTranslating = ref(false)
 const isLoadingPeliculas = ref(true)
+const subiendoImagen = ref(false)
+const progresoSubida = ref(0)
 const resultadosBusqueda = ref<any[]>([])
 const peliculaSeleccionada = ref(false)
 const errorHorario = ref('')
 const peliculaEditando = ref<string | null>(null)
+const archivoSeleccionado = ref<File | null>(null)
+const vistaPrevia = ref('')
+
+// Verificar rol de usuario
+const userRole = ref(localStorage.getItem('userRole') || '')
 
 // Datos desde Supabase
 const stats = reactive({
@@ -473,6 +544,83 @@ const fechaMinima = computed(() => {
   const today = new Date()
   return today.toISOString().split('T')[0]
 })
+
+// Manejo de archivos de imagen
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  
+  if (!file) return
+  
+  // Validar tipo de archivo
+  if (!file.type.startsWith('image/')) {
+    alert('Por favor selecciona un archivo de imagen válido')
+    return
+  }
+  
+  // Validar tamaño (máximo 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('La imagen no debe superar los 5MB')
+    return
+  }
+  
+  archivoSeleccionado.value = file
+  
+  // Crear vista previa
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    vistaPrevia.value = e.target?.result as string
+  }
+  reader.readAsDataURL(file)
+}
+
+const subirImagenASupabase = async (file: File): Promise<string | null> => {
+  try {
+    // Verificar que el usuario sea administrador
+    const userRole = localStorage.getItem('userRole')
+    if (userRole !== 'admin') {
+      alert('Solo los administradores pueden subir imágenes')
+      return null
+    }
+    
+    subiendoImagen.value = true
+    progresoSubida.value = 0
+    
+    // Generar nombre único para el archivo
+    const timestamp = Date.now()
+    const extension = file.name.split('.').pop()
+    const nombreArchivo = `poster_${timestamp}.${extension}`
+    
+    // Subir archivo a Supabase Storage
+    const { error } = await supabase.storage
+      .from('posters-peliculas')
+      .upload(nombreArchivo, file, {
+        cacheControl: '3600',
+        upsert: false
+      })
+    
+    if (error) {
+      console.error('Error subiendo imagen:', error)
+      throw error
+    }
+    
+    progresoSubida.value = 100
+    
+    // Obtener URL pública de la imagen
+    const { data: urlData } = supabase.storage
+      .from('posters-peliculas')
+      .getPublicUrl(nombreArchivo)
+    
+    return urlData.publicUrl
+  } catch (error) {
+    console.error('Error en subirImagenASupabase:', error)
+    alert('Error al subir la imagen: ' + (error as Error).message)
+    return null
+  } finally {
+    subiendoImagen.value = false
+    progresoSubida.value = 0
+  }
+}
 
 // Cargar datos iniciales
 onMounted(async () => {
@@ -694,12 +842,24 @@ const guardarPelicula = async () => {
   }
   
   try {
+    let posterUrl = formPelicula.poster_url
+    
+    // Si hay un archivo seleccionado, subirlo primero
+    if (archivoSeleccionado.value && tipoPoster.value === 'upload') {
+      const urlSubida = await subirImagenASupabase(archivoSeleccionado.value)
+      if (!urlSubida) {
+        alert('Error al subir la imagen. Por favor intenta de nuevo.')
+        return
+      }
+      posterUrl = urlSubida
+    }
+    
     const peliculaData = {
       titulo: formPelicula.titulo,
       director: formPelicula.director,
       duracion_min: formPelicula.duracion_min,
       genero: formPelicula.genero,
-      poster_url: formPelicula.poster_url,
+      poster_url: posterUrl,
       sinopsis: formPelicula.sinopsis
     }
 
@@ -775,6 +935,9 @@ const cancelarFormulario = () => {
   peliculaEditando.value = null
   resultadosBusqueda.value = []
   searchQuery.value = ''
+  archivoSeleccionado.value = null
+  vistaPrevia.value = ''
+  tipoPoster.value = 'url'
 }
 
 // Funciones para Horarios
