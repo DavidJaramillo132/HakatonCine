@@ -242,7 +242,7 @@
                               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                           ]"
                         >
-                          📤 Subir Imagen
+                          Subir Imagen
                         </button>
                         <button
                           type="button"
@@ -255,7 +255,7 @@
                               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                           ]"
                         >
-                          🔗 URL de Imagen
+                          URL de Imagen
                         </button>
                       </div>
 
@@ -489,7 +489,7 @@
                         @click="eliminarFuncion(funcion.id)"
                         class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
                       >
-                        🗑️ Eliminar
+                        Eliminar
                       </button>
                     </div>
                   </div>
