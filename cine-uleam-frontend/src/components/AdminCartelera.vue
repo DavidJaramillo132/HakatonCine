@@ -218,13 +218,30 @@
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Género *</label>
-                    <input
+                    <select
                       v-model="formPelicula.genero"
-                      type="text"
                       required
-                      placeholder="Ej: Acción, Drama, Comedia"
-                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent"
-                    />
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#8B0000] focus:border-transparent bg-white"
+                    >
+                      <option value="" disabled>Selecciona un género</option>
+                      <option value="Acción">Acción</option>
+                      <option value="Aventura">Aventura</option>
+                      <option value="Animación">Animación</option>
+                      <option value="Ciencia Ficción">Ciencia Ficción</option>
+                      <option value="Comedia">Comedia</option>
+                      <option value="Crimen">Crimen</option>
+                      <option value="Documental">Documental</option>
+                      <option value="Drama">Drama</option>
+                      <option value="Fantasía">Fantasía</option>
+                      <option value="Horror">Horror</option>
+                      <option value="Musical">Musical</option>
+                      <option value="Misterio">Misterio</option>
+                      <option value="Romance">Romance</option>
+                      <option value="Suspenso">Suspenso</option>
+                      <option value="Terror">Terror</option>
+                      <option value="Thriller">Thriller</option>
+                      <option value="Western">Western</option>
+                    </select>
                   </div>
                   <div class="md:col-span-2">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Póster de la Película</label>
