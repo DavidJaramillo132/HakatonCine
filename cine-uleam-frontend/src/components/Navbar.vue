@@ -1,10 +1,14 @@
 <template>
-    <header class="bg-[#8B0000] text-white shadow-lg sticky top-0 z-50">
+    <header class="bg-white text-gray-800 shadow-lg sticky top-0 z-50 border-b-4 border-[#8B0000]">
         <nav class="container mx-auto px-6 py-4">
             <div class="flex items-center justify-between">
                 <!-- Logo -->
-                <div class="flex items-center space-x-2">
-                    <h1 class="text-2xl font-bold tracking-wide">CINE ULEAM</h1>
+                <div class="flex items-center space-x-3">
+                    <img 
+                        src="../assets/logo-uleam.png" 
+                        alt="Logo ULEAM" 
+                        class="h-20 w-20 object-contain"
+                    />
                 </div>
                 
                 <!-- Desktop Menu -->
@@ -13,7 +17,7 @@
                         <li>
                             <router-link 
                                 to="/" 
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 Inicio
                             </router-link>
@@ -21,7 +25,7 @@
                         <li v-if="isAuthenticated">
                             <router-link 
                                 :to="dashboardRoute"
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 {{ dashboardLabel }}
                             </router-link>
@@ -29,18 +33,18 @@
                         <li v-if="userRole === 'admin'">
                             <router-link 
                                 to="/escanear-qr"
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 Escáner QR
                             </router-link>
                         </li>
-                        <li v-if="isAuthenticated" class="text-sm text-yellow-200 font-semibold">
+                        <li v-if="isAuthenticated" class="text-sm text-gray-600 font-semibold">
                             ¡Hola, {{ displayName }}!
                         </li>
                         <li v-if="!isAuthenticated">
                             <router-link 
                                 to="/cartelera" 
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 Cartelera
                             </router-link>
@@ -48,7 +52,7 @@
                         <li v-if="isStudent">
                             <router-link 
                                 to="/sugerencia" 
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 Sugerencia
                             </router-link>
@@ -56,7 +60,7 @@
                         <li v-if="isAuthenticated">
                             <router-link 
                                 to="/alquiler-sala" 
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 Alquiler de Sala
                                 </router-link>
@@ -64,7 +68,7 @@
                         <li v-if="isStudent">
                             <router-link 
                                 to="/encuestas" 
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 Encuestas
                             </router-link>
@@ -72,7 +76,7 @@
                         <li v-if="!isAuthenticated">
                             <router-link 
                                 to="/login" 
-                                class="hover:text-yellow-400 transition-colors duration-200 font-medium"
+                                class="text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                             >
                                 Iniciar Sesión
                             </router-link>
@@ -80,7 +84,7 @@
                         <li v-if="!isAuthenticated">
                             <router-link 
                                 to="/register" 
-                                class="bg-white text-[#8B0000] px-6 py-2 rounded-lg font-semibold hover:bg-yellow-400 hover:text-[#8B0000] transition-all duration-200"
+                                class="bg-[#8B0000] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#A52A2A] transition-all duration-200 shadow-md"
                             >
                                 Registrarse
                             </router-link>
@@ -88,7 +92,7 @@
                         <li v-if="isAuthenticated">
                             <button
                                 @click="handleLogout"
-                                class="bg-white/10 px-6 py-2 rounded-lg font-semibold hover:bg-white hover:text-[#8B0000] transition-all duration-200"
+                                class="bg-[#8B0000] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#A52A2A] transition-all duration-200 shadow-md"
                             >
                                 Cerrar sesión
                             </button>
@@ -100,7 +104,7 @@
                 <div class="md:hidden">
                     <button 
                         @click="toggleMenu" 
-                        class="text-white focus:outline-none"
+                        class="text-[#8B0000] focus:outline-none"
                         aria-label="Toggle menu"
                     >
                         <svg v-if="!isMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,13 +118,13 @@
             </div>
 
             <!-- Mobile Menu -->
-            <div v-if="isMenuOpen" class="md:hidden mt-4 pb-4">
+            <div v-if="isMenuOpen" class="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
                 <ul class="flex flex-col space-y-4">
                     <li>
                         <router-link 
                             to="/" 
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             Inicio
                         </router-link>
@@ -129,7 +133,7 @@
                         <router-link 
                             :to="dashboardRoute" 
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             {{ dashboardLabel }}
                         </router-link>
@@ -138,19 +142,19 @@
                         <router-link 
                             to="/escanear-qr"
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             Escáner QR
                         </router-link>
                     </li>
-                    <li v-if="isAuthenticated" class="text-sm text-yellow-200 font-semibold">
+                    <li v-if="isAuthenticated" class="text-sm text-gray-600 font-semibold">
                         ¡Hola, {{ displayName }}!
                     </li>
                     <li v-if="!isAuthenticated">
                         <router-link 
                             to="/cartelera" 
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             Cartelera
                         </router-link>
@@ -159,7 +163,7 @@
                         <router-link 
                             to="/sugerencia" 
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             Sugerencia
                         </router-link>
@@ -168,7 +172,7 @@
                         <router-link 
                             to="/alquiler-sala" 
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             Alquiler de Sala
                         </router-link>
@@ -177,7 +181,7 @@
                         <router-link 
                             to="/encuestas" 
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             Encuestas
                         </router-link>
@@ -186,7 +190,7 @@
                         <router-link 
                             to="/login" 
                             @click="closeMenu"
-                            class="block hover:text-yellow-400 transition-colors duration-200 font-medium"
+                            class="block text-gray-700 hover:text-[#8B0000] transition-colors duration-200 font-medium"
                         >
                             Iniciar Sesión
                         </router-link>
@@ -195,7 +199,7 @@
                         <router-link 
                             to="/register" 
                             @click="closeMenu"
-                            class="block bg-white text-[#8B0000] px-6 py-2 rounded-lg font-semibold text-center hover:bg-yellow-400 hover:text-[#8B0000] transition-all duration-200"
+                            class="block bg-[#8B0000] text-white px-6 py-2 rounded-lg font-semibold text-center hover:bg-[#A52A2A] transition-all duration-200 shadow-md"
                         >
                             Registrarse
                         </router-link>
@@ -203,7 +207,7 @@
                     <li v-if="isAuthenticated">
                         <button
                             @click="() => { handleLogout(); closeMenu(); }"
-                            class="w-full bg-white/10 px-6 py-2 rounded-lg font-semibold hover:bg-white hover:text-[#8B0000] transition-all duration-200"
+                            class="w-full bg-[#8B0000] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#A52A2A] transition-all duration-200 shadow-md"
                         >
                             Cerrar sesión
                         </button>
