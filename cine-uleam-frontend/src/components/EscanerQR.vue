@@ -310,11 +310,27 @@ const iniciarEscaneo = async () => {
       throw new Error('No se encontró ninguna cámara')
     }
 
-    // Usar la primera cámara disponible
-    const selectedDevice = videoInputDevices[0]
-    if (!selectedDevice) throw new Error('No se encontró un dispositivo de cámara válido')
-
-    const selectedDeviceId = selectedDevice.deviceId
+    // Seleccionar la cámara apropiada
+    let selectedDeviceId: string
+    
+    // En móviles, buscar la cámara trasera (environment)
+    // En desktop, usar la primera disponible
+    const backCamera = videoInputDevices.find(device => 
+      device.label.toLowerCase().includes('back') || 
+      device.label.toLowerCase().includes('rear') ||
+      device.label.toLowerCase().includes('environment')
+    )
+    
+    if (backCamera) {
+      selectedDeviceId = backCamera.deviceId
+      console.log('Usando cámara trasera:', backCamera.label)
+    } else {
+      // Si no encuentra cámara trasera, usar la última (generalmente es la trasera en móviles)
+      const lastCamera = videoInputDevices[videoInputDevices.length - 1]
+      if (!lastCamera) throw new Error('No se encontró un dispositivo de cámara válido')
+      selectedDeviceId = lastCamera.deviceId
+      console.log('Usando cámara:', lastCamera.label)
+    }
 
     // Verificar que el elemento <video> exista
     if (!videoElement.value) {
