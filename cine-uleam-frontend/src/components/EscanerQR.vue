@@ -360,12 +360,13 @@ const procesarQR = async (qrText: string) => {
 
     // Validar en la base de datos
     const { data: ticketData, error: ticketError } = await supabase
-      .from('ticket_qr')
+      .from('tickets_qr')
       .select('*')
       .eq('reserva_id', qrData.reserva_id)
       .single()
 
     if (ticketError || !ticketData) {
+      console.error('Error buscando ticket:', ticketError)
       resultado.value = {
         valido: false,
         mensaje: 'Código QR no encontrado o inválido'
@@ -442,14 +443,17 @@ const confirmarEntrada = async () => {
   try {
     // Actualizar estado del ticket a "usado"
     const { error: ticketError } = await supabase
-      .from('ticket_qr')
+      .from('tickets_qr')
       .update({
         estado: 'usado',
         verificado_en: new Date().toISOString()
       })
       .eq('reserva_id', resultado.value.datos.reserva_id)
 
-    if (ticketError) throw ticketError
+    if (ticketError) {
+      console.error('Error actualizando ticket:', ticketError)
+      throw ticketError
+    }
 
     // Actualizar estado de la reserva a "asistida"
     const { error: reservaError } = await supabase
@@ -459,7 +463,10 @@ const confirmarEntrada = async () => {
       })
       .eq('id', resultado.value.datos.reserva_id)
 
-    if (reservaError) throw reservaError
+    if (reservaError) {
+      console.error('Error actualizando reserva:', reservaError)
+      throw reservaError
+    }
 
     // Marcar como confirmado
     if (resultado.value) {
