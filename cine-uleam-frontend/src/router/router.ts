@@ -4,6 +4,9 @@ import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import AdminCartelera from '../components/AdminCartelera.vue';
 import Cartelera from '../components/Cartelera.vue';
+import GeneradorQR from '../components/GeneradorQR.vue';
+import EscanerQR from '../components/EscanerQR.vue';
+
 const routes = [
   { 
     path: '/', 
@@ -29,6 +32,16 @@ const routes = [
     path: '/cartelera', 
     name: 'Cartelera',
     component: Cartelera
+  },
+  { 
+    path: '/generar-qr', 
+    name: 'GeneradorQR',
+    component: GeneradorQR
+  },
+  { 
+    path: '/escanear-qr', 
+    name: 'EscanerQR',
+    component: EscanerQR
   }
 ]
 
