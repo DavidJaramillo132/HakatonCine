@@ -128,11 +128,11 @@
         </div>
 
         <div v-if="successMessage" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-          ✅ {{ successMessage }}
+          <i class="fa-solid fa-circle-check mr-1"></i>{{ successMessage }}
         </div>
 
         <div v-if="errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-          ⚠️ {{ errorMessage }}
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>{{ errorMessage }}
         </div>
 
         <div>

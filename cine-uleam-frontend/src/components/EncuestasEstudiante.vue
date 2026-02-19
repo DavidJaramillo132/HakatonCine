@@ -18,7 +18,7 @@
       <div v-else>
         <!-- Encuestas pendientes -->
         <div v-if="encuestasPendientes.length > 0" class="mb-12">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">📝 Encuestas Activas</h2>
+          <h2 class="text-2xl font-bold text-gray-800 mb-6"><i class="fa-solid fa-pen-to-square mr-2"></i>Encuestas Activas</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div
               v-for="encuesta in encuestasPendientes"
@@ -27,9 +27,9 @@
             >
               <h3 class="text-xl font-bold text-gray-800 mb-2">{{ encuesta.pregunta }}</h3>
               <p class="text-sm text-gray-500 mb-6">
-                📅 {{ formatearFecha(encuesta.fecha_creacion) }}
+                <i class="fa-solid fa-calendar-days mr-1"></i>{{ formatearFecha(encuesta.fecha_creacion) }}
                 <span v-if="encuesta.fecha_cierre">
-                  • 🔒 Cierra: {{ formatearFecha(encuesta.fecha_cierre) }}
+                  • <i class="fa-solid fa-lock mr-1"></i>Cierra: {{ formatearFecha(encuesta.fecha_cierre) }}
                 </span>
               </p>
 
@@ -55,7 +55,7 @@
 
         <!-- Encuestas respondidas -->
         <div v-if="encuestasRespondidas.length > 0">
-          <h2 class="text-2xl font-bold text-gray-800 mb-6">✅ Encuestas Respondidas</h2>
+          <h2 class="text-2xl font-bold text-gray-800 mb-6"><i class="fa-solid fa-circle-check mr-2"></i>Encuestas Respondidas</h2>
           <div class="grid grid-cols-1 gap-4">
             <div
               v-for="item in encuestasRespondidas"
@@ -66,7 +66,7 @@
                 <div class="flex-1">
                   <h3 class="text-lg font-bold text-gray-800 mb-1">{{ item.encuesta.pregunta }}</h3>
                   <p class="text-sm text-gray-500">
-                    📅 {{ formatearFecha(item.encuesta.fecha_creacion) }}
+                    <i class="fa-solid fa-calendar-days mr-1"></i>{{ formatearFecha(item.encuesta.fecha_creacion) }}
                   </p>
                 </div>
                 <span

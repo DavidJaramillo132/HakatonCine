@@ -1,23 +1,31 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../components/Home.vue';
-import Login from '../components/Login.vue';
-import Register from '../components/Register.vue';
-import AdminCartelera from '../components/AdminCartelera.vue';
-import AdminDashboard from '../components/AdminDashboard.vue';
-import AdminEncuestas from '../components/AdminEncuestas.vue';
-import Cartelera from '../components/Cartelera.vue';
-import Sugerencia from '../components/Sugerencia.vue';
-import EncuestasEstudiante from '../components/EncuestasEstudiante.vue';
-import GeneradorQR from '../components/GeneradorQR.vue';
-import EscanerQR from '../components/EscanerQR.vue';
-import AdminSecretRegister from '../components/AdminSecretRegister.vue';
-import AdminNotificaciones from '../components/AdminNotificaciones.vue';
-import ForgotPassword from '../components/ForgotPassword.vue';
-import Proximas from '../components/Proximas.vue';
-import Contacto from '../components/Contacto.vue';
-import AcercaDe from '../components/AcercaDe.vue';
-import AlquilerSala from '../components/AlquilerSala.vue';
 import { supabase } from '../lib/connectSupabase';
+
+// Carga inmediata solo para rutas críticas del flujo inicial
+const Home           = () => import('../components/Home.vue');
+const Login          = () => import('../components/Login.vue');
+const Register       = () => import('../components/Register.vue');
+const ForgotPassword = () => import('../components/ForgotPassword.vue');
+const ResetPassword  = () => import('../components/ResetPassword.vue');
+
+// Rutas de estudiante — chunk separado
+const Cartelera           = () => import(/* webpackChunkName: "student" */ '../components/Cartelera.vue');
+const Sugerencia          = () => import(/* webpackChunkName: "student" */ '../components/Sugerencia.vue');
+const EncuestasEstudiante = () => import(/* webpackChunkName: "student" */ '../components/EncuestasEstudiante.vue');
+const GeneradorQR         = () => import(/* webpackChunkName: "student" */ '../components/GeneradorQR.vue');
+const AlquilerSala        = () => import(/* webpackChunkName: "student" */ '../components/AlquilerSala.vue');
+const Proximas            = () => import(/* webpackChunkName: "student" */ '../components/Proximas.vue');
+const Contacto            = () => import(/* webpackChunkName: "student" */ '../components/Contacto.vue');
+const AcercaDe            = () => import(/* webpackChunkName: "student" */ '../components/AcercaDe.vue');
+
+// Rutas de administrador — chunk separado
+const AdminDashboard      = () => import(/* webpackChunkName: "admin" */ '../components/AdminDashboard.vue');
+const AdminCartelera      = () => import(/* webpackChunkName: "admin" */ '../components/AdminCartelera.vue');
+const AdminEncuestas      = () => import(/* webpackChunkName: "admin" */ '../components/AdminEncuestas.vue');
+const AdminNotificaciones = () => import(/* webpackChunkName: "admin" */ '../components/AdminNotificaciones.vue');
+const AdminSalas          = () => import(/* webpackChunkName: "admin" */ '../components/AdminSalas.vue');
+const AdminSecretRegister = () => import(/* webpackChunkName: "admin" */ '../components/AdminSecretRegister.vue');
+const EscanerQR           = () => import(/* webpackChunkName: "admin" */ '../components/EscanerQR.vue');
 
 const routes = [
   {
@@ -92,6 +100,12 @@ const routes = [
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
+    path: '/admin/salas',
+    name: 'AdminSalas',
+    component: AdminSalas,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
     path: '/encuestas',
     name: 'EncuestasEstudiante',
     component: EncuestasEstudiante,
@@ -102,6 +116,11 @@ const routes = [
     name: 'ForgotPassword',
     component: ForgotPassword,
     meta: { requiresGuest: true }
+  },
+  {
+    path: '/reset-password',
+    name: 'ResetPassword',
+    component: ResetPassword
   },
   {
     path: '/proximas',

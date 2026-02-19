@@ -3,7 +3,7 @@
     <div class="container mx-auto px-2 md:px-4 max-w-4xl">
       <div class="bg-white rounded-xl shadow-lg p-4 md:p-8">
         <h1 class="text-2xl md:text-3xl font-bold text-[#8B0000] mb-4 md:mb-6 text-center">
-          📷 Escáner de QR
+          <i class="fa-solid fa-camera mr-2"></i>Escáner de QR
         </h1>
 
         <!-- Modo Cámara -->
@@ -69,7 +69,12 @@
             ]"
           >
             <div class="text-center mb-3 md:mb-4">
-              <span class="text-4xl md:text-6xl">{{ resultado.valido ? '✅' : '❌' }}</span>
+              <i
+                :class="[
+                  'text-5xl md:text-6xl',
+                  resultado.valido ? 'fa-solid fa-circle-check text-green-500' : 'fa-solid fa-circle-xmark text-red-500'
+                ]"
+              ></i>
               <h2
                 :class="[
                   'text-xl md:text-2xl font-bold mt-2',
@@ -92,7 +97,7 @@
             <!-- Información del Usuario -->
             <div v-if="resultado.valido && resultado.datos" class="bg-white rounded-lg p-4 md:p-6 space-y-3 md:space-y-4">
               <h3 class="font-bold text-base md:text-lg text-gray-800 border-b pb-2">
-                👤 Información del Asistente
+                <i class="fa-solid fa-user mr-2"></i>Información del Asistente
               </h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
@@ -113,7 +118,7 @@
               </div>
 
               <div class="border-t pt-3 md:pt-4">
-                <h4 class="font-bold text-sm md:text-base text-gray-800 mb-2 md:mb-3">🎬 Detalles de la Función</h4>
+                <h4 class="font-bold text-sm md:text-base text-gray-800 mb-2 md:mb-3"><i class="fa-solid fa-film mr-2"></i>Detalles de la Función</h4>
                 <div class="grid grid-cols-2 gap-3 md:gap-4 text-xs md:text-sm">
                   <div class="col-span-2">
                     <span class="font-medium text-gray-600">Película:</span>
@@ -169,7 +174,7 @@
             @click="resetearEscaneo"
             class="w-full bg-[#8B0000] text-white py-2.5 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-[#A52A2A] transition-colors"
           >
-            🔄 Escanear Siguiente
+            <i class="fa-solid fa-rotate mr-2"></i>Escanear Siguiente
           </button>
         </div>
       </div>

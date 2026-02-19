@@ -198,7 +198,7 @@ interface PeliculaSugerencia {
   poster_url?: string
 }
 
-const API_KEY = '34e63b5b'
+const API_KEY = import.meta.env.VITE_OMDB_API_KEY as string
 const API_BASE_URL = 'https://www.omdbapi.com/'
 
 const peliculas = ref<PeliculaSugerencia[]>([])

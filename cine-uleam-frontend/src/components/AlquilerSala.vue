@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
-          🎭 Alquiler de Sala
+          Alquiler de Sala
         </h1>
         <p class="text-lg text-gray-600 max-w-2xl mx-auto">
           Solicita el alquiler de la sala de cine para eventos académicos e institucionales
@@ -110,20 +110,20 @@
                       @click="aprobarSolicitud(solicitud.id)"
                       class="text-[#006847] hover:text-[#005238] transition-colors font-semibold"
                     >
-                      ✅ Aprobar
+                      <i class="fa-solid fa-check mr-1"></i>Aprobar
                     </button>
                     <button
                       v-if="solicitud.estado === 'pendiente'"
                       @click="rechazarSolicitud(solicitud.id)"
                       class="text-[#C8102E] hover:text-[#A00D25] transition-colors font-semibold"
                     >
-                      ❌ Rechazar
+                      <i class="fa-solid fa-xmark mr-1"></i>Rechazar
                     </button>
                     <button
                       @click="verDetalles(solicitud)"
                       class="text-blue-600 hover:text-blue-800 transition-colors"
                     >
-                      👁️ Ver
+                      <i class="fa-solid fa-eye mr-1"></i>Ver
                     </button>
                   </td>
                 </tr>
@@ -300,7 +300,7 @@
                     </div>
                     <p class="text-xs text-gray-500">PNG, JPG, PDF hasta 10MB</p>
                     <p v-if="archivoSeleccionado" class="text-sm text-green-600 font-medium">
-                      ✓ {{ archivoSeleccionado.name }}
+                      <i class="fa-solid fa-check mr-1"></i>{{ archivoSeleccionado.name }}
                     </p>
                   </div>
                 </div>
@@ -308,11 +308,11 @@
 
               <!-- Mensajes de Error/Success -->
               <div v-if="mensajeError" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-                ⚠️ {{ mensajeError }}
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i>{{ mensajeError }}
               </div>
 
               <div v-if="mensajeSuccess" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-                ✅ {{ mensajeSuccess }}
+                <i class="fa-solid fa-circle-check mr-1"></i>{{ mensajeSuccess }}
               </div>
 
               <!-- Botón de Envío -->
@@ -321,7 +321,7 @@
                 :disabled="isSubmitting"
                 class="w-full bg-[#006847] text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-[#005238] hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                <span v-if="!isSubmitting">📋 Solicitar Alquiler</span>
+                <span v-if="!isSubmitting"><i class="fa-solid fa-clipboard-list mr-2"></i>Solicitar Alquiler</span>
                 <span v-else class="flex items-center gap-2">
                   <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

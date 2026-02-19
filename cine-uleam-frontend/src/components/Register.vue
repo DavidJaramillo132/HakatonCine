@@ -157,7 +157,7 @@
 
         <!-- Success Message -->
         <div v-if="successMessage" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-          ✅ {{ successMessage }}
+          <i class="fa-solid fa-circle-check mr-1"></i>{{ successMessage }}
         </div>
 
         <!-- Error Message -->

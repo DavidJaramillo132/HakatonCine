@@ -34,7 +34,7 @@ Sistema completo de gestión cinematográfica para la Universidad Laica Eloy Alf
   - Reservas del día
   - Películas activas
   - Actualización automática cada 30 segundos
-- ✅ **Escaneo de QR**: Valida entradas escaneando códigos QR o ingresando el código manualmente
+-  **Escaneo de QR**: Valida entradas escaneando códigos QR o ingresando el código manualmente
 - 👥 **Gestión de Usuarios**: Registro de nuevos administradores con código secreto
 
 ## 🛠️ Tecnologías

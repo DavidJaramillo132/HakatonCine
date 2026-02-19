@@ -720,7 +720,7 @@ const cargarFunciones = async () => {
 const cargarSalas = async () => {
   try {
     const { data, error } = await supabase
-      .from('sala')
+      .from('salas')
       .select('*')
       .order('nombre', { ascending: true })
 
@@ -757,34 +757,13 @@ const cargarEstadisticas = async () => {
     const finHoy = new Date()
     finHoy.setHours(23, 59, 59, 999)
     
-    try {
-      // Método 1: Usar campo creada_en si existe
-      const { data: reservasData, error: reservasError } = await supabase
-        .from('reservas')
-        .select('id')
-        .gte('creada_en', inicioHoy.toISOString())
-        .lte('creada_en', finHoy.toISOString())
-      
-      if (!reservasError && reservasData) {
-        stats.reservasHoy = reservasData.length
-      } else {
-        // Método 2: Contar todas las reservas activas de hoy
-        const { count: reservasCount } = await supabase
-          .from('reservas')
-          .select('*', { count: 'exact', head: true })
-          .eq('estado', 'activa')
-        
-        stats.reservasHoy = reservasCount || 0
-      }
-    } catch (error) {
-      console.error('Error cargando reservas:', error)
-      // Método 3: Contar todas las reservas sin filtro
-      const { count: reservasCount } = await supabase
-        .from('reservas')
-        .select('*', { count: 'exact', head: true })
-      
-      stats.reservasHoy = reservasCount || 0
-    }
+    const { data: reservasData } = await supabase
+      .from('reservas')
+      .select('id')
+      .gte('fecha_reserva', inicioHoy.toISOString())
+      .lte('fecha_reserva', finHoy.toISOString())
+
+    stats.reservasHoy = reservasData?.length ?? 0
   } catch (error) {
     console.error('Error cargando estadísticas:', error)
   }
@@ -796,7 +775,7 @@ const buscarPeliculaAPI = async () => {
 
   isSearching.value = true
   try {
-    const apiKey = '34e63b5b'
+    const apiKey = import.meta.env.VITE_OMDB_API_KEY
     const response = await fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(searchQuery.value)}&apikey=${apiKey}`)
     const data = await response.json()
 
@@ -843,7 +822,7 @@ const seleccionarPeliculaAPI = async (pelicula: any) => {
   try {
     isTranslating.value = true
     // Obtener detalles completos de la película
-    const apiKey = '34e63b5b'
+    const apiKey = import.meta.env.VITE_OMDB_API_KEY
     const response = await fetch(`https://www.omdbapi.com/?i=${pelicula.imdbID}&apikey=${apiKey}`)
     const data = await response.json()
     

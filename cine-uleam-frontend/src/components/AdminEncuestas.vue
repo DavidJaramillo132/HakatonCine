@@ -128,9 +128,9 @@
                   </span>
                 </div>
                 <div class="flex gap-4 text-sm text-gray-500">
-                  <span>📅 Creada: {{ formatearFecha(encuesta.fecha_creacion) }}</span>
-                  <span v-if="encuesta.fecha_cierre">🔒 Cierra: {{ formatearFecha(encuesta.fecha_cierre) }}</span>
-                  <span v-else>♾️ Sin fecha de cierre</span>
+                  <span><i class="fa-solid fa-calendar-days mr-1"></i>Creada: {{ formatearFecha(encuesta.fecha_creacion) }}</span>
+                  <span v-if="encuesta.fecha_cierre"><i class="fa-solid fa-lock mr-1"></i>Cierra: {{ formatearFecha(encuesta.fecha_cierre) }}</span>
+                  <span v-else><i class="fa-solid fa-infinity mr-1"></i>Sin fecha de cierre</span>
                 </div>
               </div>
               <div class="flex gap-2">

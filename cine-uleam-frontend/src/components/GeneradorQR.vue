@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4 max-w-2xl">
       <div class="bg-white rounded-xl shadow-lg p-8">
         <h1 class="text-3xl font-bold text-[#8B0000] mb-2 text-center">
-          🎫 {{ qrGenerado ? 'Tu Código QR' : 'Completa tu Reserva' }}
+          <i class="fa-solid fa-ticket mr-2"></i>{{ qrGenerado ? 'Tu Código QR' : 'Completa tu Reserva' }}
         </h1>
         <p v-if="!qrGenerado" class="text-center text-gray-600 mb-6">
           {{ peliculaSeleccionada ? `Has seleccionado: ${peliculaSeleccionada.titulo}` : 'Selecciona una película y función' }}
@@ -13,7 +13,7 @@
         <div v-if="!qrGenerado" class="space-y-6">
           <!-- Información del Usuario Autenticado -->
           <div v-if="usuarioActual" class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-            <h3 class="font-bold text-lg text-gray-800 mb-4">👤 Tu Información</h3>
+            <h3 class="font-bold text-lg text-gray-800 mb-4"><i class="fa-solid fa-user mr-2"></i>Tu Información</h3>
             <div class="space-y-2 text-sm">
               <div>
                 <span class="font-medium text-gray-700">Nombre:</span>
@@ -40,10 +40,10 @@
                 class="w-20 h-28 object-cover rounded-lg shadow-lg"
               />
               <div class="flex-1">
-                <h3 class="font-bold text-xl mb-2">🎬 {{ peliculaSeleccionada.titulo }}</h3>
+                <h3 class="font-bold text-xl mb-2"><i class="fa-solid fa-film mr-2"></i>{{ peliculaSeleccionada.titulo }}</h3>
                 <div class="text-sm space-y-1 opacity-90">
-                  <p v-if="peliculaSeleccionada.duracion_min">⏱️ {{ peliculaSeleccionada.duracion_min }} min</p>
-                  <p v-if="peliculaSeleccionada.genero">🎭 {{ peliculaSeleccionada.genero }}</p>
+                  <p v-if="peliculaSeleccionada.duracion_min"><i class="fa-solid fa-stopwatch mr-1"></i>{{ peliculaSeleccionada.duracion_min }} min</p>
+                  <p v-if="peliculaSeleccionada.genero"><i class="fa-solid fa-masks-theater mr-1"></i>{{ peliculaSeleccionada.genero }}</p>
                 </div>
               </div>
             </div>
@@ -77,14 +77,14 @@
             >
               <option value="">Seleccionar función...</option>
               <option v-for="funcion in funcionesFiltradas" :key="funcion.id" :value="funcion.id">
-                📅 {{ formatearFecha(funcion.fecha) }} - 🕐 {{ funcion.hora_inicio }}
+                {{ formatearFecha(funcion.fecha) }} — {{ funcion.hora_inicio }}
               </option>
             </select>
             <p v-if="!formulario.pelicula_id" class="text-sm text-gray-500 mt-1">
               Primero selecciona una película
             </p>
             <p v-else-if="funcionesFiltradas.length === 0" class="text-sm text-orange-600 mt-1">
-              ⚠️ No hay funciones disponibles para esta película
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>No hay funciones disponibles para esta película
             </p>
           </div>
 
@@ -109,7 +109,7 @@
             :disabled="!formularioValido"
             class="w-full bg-[#8B0000] text-white py-4 rounded-lg font-semibold text-lg hover:bg-[#A52A2A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105 transition-all"
           >
-            🎫 Generar Mi Código QR
+            <i class="fa-solid fa-ticket mr-2"></i>Generar Mi Código QR
           </button>
           
           <button
@@ -124,13 +124,13 @@
         <div v-else class="space-y-6">
           <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
             <p class="text-green-800 font-medium">
-              ✅ ¡QR Generado Exitosamente!
+              <i class="fa-solid fa-circle-check mr-1"></i>¡QR Generado Exitosamente!
             </p>
           </div>
 
           <!-- Información de la Reserva -->
           <div class="bg-gray-50 rounded-lg p-6 space-y-3">
-            <h3 class="font-bold text-lg text-gray-800 mb-4">📋 Información de la Reserva</h3>
+            <h3 class="font-bold text-lg text-gray-800 mb-4"><i class="fa-solid fa-clipboard-list mr-2"></i>Información de la Reserva</h3>
             <div class="grid grid-cols-2 gap-3 text-sm">
               <div class="col-span-2">
                 <span class="font-medium text-gray-700">Nombre:</span>
@@ -178,26 +178,26 @@
               @click="descargarQR"
               class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl transform hover:scale-105"
             >
-              📥 Descargar QR
+              <i class="fa-solid fa-download mr-2"></i>Descargar QR
             </button>
             
             <button
               @click="router.push('/cartelera')"
               class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
             >
-              🎬 Ver Más Películas
+              <i class="fa-solid fa-film mr-2"></i>Ver Más Películas
             </button>
             
             <button
               @click="reiniciar"
               class="w-full bg-gray-500 text-white py-3 rounded-lg font-semibold hover:bg-gray-600 transition-colors"
             >
-              🔄 Generar Nueva Reserva
+              <i class="fa-solid fa-rotate mr-2"></i>Generar Nueva Reserva
             </button>
           </div>
 
           <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-            <p class="font-medium mb-2">💡 Instrucciones:</p>
+            <p class="font-medium mb-2"><i class="fa-solid fa-lightbulb mr-1"></i>Instrucciones:</p>
             <ul class="list-disc list-inside space-y-1">
               <li>Descarga o guarda una captura del código QR</li>
               <li>Presenta este QR en la entrada del cine</li>
@@ -420,8 +420,7 @@ const generarQR = async () => {
       }
     })
 
-    console.log('✅ QR generado exitosamente en el canvas')
-    alert('✅ ¡Reserva creada y QR generado exitosamente!')
+    alert('¡Reserva creada y QR generado exitosamente!')
     
   } catch (error) {
     console.error('Error generando QR:', error)

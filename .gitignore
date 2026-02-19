@@ -1,6 +1,42 @@
-/node_modules
-/.env
-/.env.local
-/.env.*.local
-node_modules
-/dist
+# ─── Dependencias ───────────────────────────────────────────
+node_modules/
+
+# ─── Build / Dist ────────────────────────────────────────────
+dist/
+dist-ssr/
+
+# ─── Variables de entorno (nunca subir al repo) ──────────────
+.env
+.env.local
+.env.*.local
+*.env
+
+# ─── TypeScript build info ───────────────────────────────────
+*.tsbuildinfo
+
+# ─── Logs ────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Editor / IDE ────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── Sistema operativo ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Caché ───────────────────────────────────────────────────
+.cache/
+.vite/

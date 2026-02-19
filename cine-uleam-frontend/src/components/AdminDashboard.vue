@@ -38,6 +38,13 @@
           </svg>
           Ver Sugerencias
         </RouterLink>
+        <RouterLink
+          to="/admin/salas"
+          class="inline-flex items-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-orange-600 transition-all duration-200"
+        >
+          <i class="fa-solid fa-building"></i>
+          Gestión de Salas
+        </RouterLink>
         <button
           @click="cargarDatos"
           class="inline-flex items-center gap-2 bg-white text-[#8B0000] px-6 py-3 rounded-xl font-semibold shadow-md hover:bg-gray-100 transition-all duration-200 border-2 border-[#8B0000]"

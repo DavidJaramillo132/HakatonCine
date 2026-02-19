@@ -97,7 +97,7 @@
 
         <!-- Error Message -->
         <div v-if="errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-          ⚠️ {{ errorMessage }}
+          <i class="fa-solid fa-triangle-exclamation mr-1"></i>{{ errorMessage }}
         </div>
 
         <!-- Submit Button -->
