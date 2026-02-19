@@ -17,5 +17,5 @@ jobs:
             "https://qatxikvgjlogwdopocvm.supabase.co/rest/v1/reservas?select=id&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
-          && echo "✅ Supabase respondió" || echo "⚠️ No se pudo conectar (exit $?)"
+          && echo "Supabase respondió" || echo " No se pudo conectar (exit $?)"
           exit 0
