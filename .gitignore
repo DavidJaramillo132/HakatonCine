@@ -40,3 +40,6 @@ desktop.ini
 # ─── Caché ───────────────────────────────────────────────────
 .cache/
 .vite/
+
+# Supabase
+supabase/
