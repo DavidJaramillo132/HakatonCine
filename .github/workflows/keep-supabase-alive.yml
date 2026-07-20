@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Ping Supabase to prevent inactivity pause
         run: |
-          curl -s -o /dev/null -w ${{ secrets.SUPABASE_URL }} \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            ${{ secrets.SUPABASE_URL }}/rest/v1/
+          curl -s -o /dev/null --fail \
+            -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}"
