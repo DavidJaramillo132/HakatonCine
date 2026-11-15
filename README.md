@@ -3,7 +3,7 @@
 
 # 🎬 Cine ULEAM — Plataforma de cartelera, reservas y control de acceso
 
-> Proyecto de hackatón para la Universidad Laica Eloy Alfaro de Manabí (ULEAM). Este README distingue **funciones presentes en el código**, **dependencias externas**, **decisiones técnicas inferidas** y **contribuciones personales pendientes de confirmar**, para que un asistente con RAG no invente información.
+> Proyecto de hackatón para la Universidad Laica Eloy Alfaro de Manabí (ULEAM). Este README distingue **funciones presentes en el código**, **dependencias externas**, **decisiones técnicas inferidas** y **contribuciones personales respaldadas por commits**, para que un asistente con RAG no invente información.
 
 **Repositorio:** https://github.com/DavidJaramillo132/HakatonCine  
 **Frontend:** [`cine-uleam-frontend/`](https://github.com/DavidJaramillo132/HakatonCine/tree/main/cine-uleam-frontend)  
@@ -18,7 +18,7 @@
 
 - **Aplicación web:** [hakaton-cine.vercel.app](https://hakaton-cine.vercel.app/).
 - **Código fuente:** [HakatonCine en GitHub](https://github.com/DavidJaramillo132/HakatonCine).
-- **Capturas:** no se adjuntan capturas verificadas en esta documentación; si se incorporan, alojarlas en `docs/screenshots/` y enlazarlas aquí.
+- **Capturas:** [galería de Cine ULEAM en el portafolio](https://portafolio-mocha-psi.vercel.app/projects/cine).
 - **Recorrido demostrable:** registro/inicio de sesión → cartelera → selección de función → creación de reserva y QR → escaneo y validación desde el panel de administración.
 
 ### Funcionalidades respaldadas por componentes del repositorio
@@ -41,23 +41,9 @@
 
 ## 2. Mi contribución y trabajo en equipo
 
-**Contexto conocido:** el repositorio está publicado en la cuenta `DavidJaramillo132` y GitHub presenta varios contribuyentes. **No es suficiente evidencia para afirmar que su propietario haya desarrollado personalmente todos los módulos.** La autoría individual requiere revisar commits, PR o confirmar responsabilidades con el equipo.
+Cine ULEAM fue un proyecto de hackatón con varios contribuyentes. En el historial, la cuenta de David Jaramillo registra el [cambio para subir pósteres desde la cartelera administrativa](https://github.com/DavidJaramillo132/HakatonCine/commit/cc5f27208ef530128fe3d36cd7c33c6bcc24db75), con su guía de pruebas, y una [actualización al formulario de recuperación de contraseña](https://github.com/DavidJaramillo132/HakatonCine/commit/922c0fb136c422c685e9c757df0d3ed07ff7366e).
 
-### Declaración de contribución personal — completar antes de indexar como hecho
-
-> **[POR VALIDAR CON EL AUTOR]** Mi rol en la hackatón fue: `[frontend / backend / integración / diseño / coordinación / otro]`.  
-> **[POR VALIDAR]** Diseñé o implementé personalmente: `[módulos concretos, rutas y archivos]`.  
-> **[POR VALIDAR]** Colaboré en: `[módulos compartidos, tipo de participación y compañeros]`.  
-> **[POR VALIDAR]** Decisiones técnicas que propuse o tomé: `[decisión + motivo + resultado]`.  
-> **[POR VALIDAR]** Evidencia de autoría: `[URL de commit, pull request, issue o explicación del equipo]`.
-
-**Cómo debe responder el RAG mientras esté sin completar:**
-
-- Sí puede afirmar: «El proyecto implementa reservas con QR mediante Vue y Supabase».
-- No debe afirmar: «David diseñó el esquema PostgreSQL» o «David programó el escáner» sin pruebas concretas.
-- Puede decir: «El repositorio está en la cuenta de David Jaramillo; no se dispone de un desglose verificado de su contribución individual».
-
-Para verificar atribuciones: [historial de commits](https://github.com/DavidJaramillo132/HakatonCine/commits/main/), [contribuyentes](https://github.com/DavidJaramillo132/HakatonCine/graphs/contributors) y archivos involucrados. La cantidad de commits, por sí sola, no demuestra autoría de diseño.
+La evidencia identifica esas contribuciones. El [historial del equipo](https://github.com/DavidJaramillo132/HakatonCine/graphs/contributors) no permite atribuirle por sí solo todo el sistema de reservas, el escáner o el diseño de la base de datos.
 
 ## 3. Arquitectura y flujo principal
 
@@ -295,7 +281,7 @@ Estos puntos se registran como **propuestas/pedientes del README original**, no 
 - **Usuarios:** estudiantes de la ULEAM y administradores del cine.
 - **Problema:** digitalización de cartelera, solicitudes de reserva, emisión de entradas QR y control de acceso.
 - **Resultado:** SPA con flujo de reserva y comprobación de tickets conectado a Supabase.
-- **Autoría personal:** indeterminada hasta completar la sección 2.
+- **Autoría personal:** cambios verificados descritos en la sección 2.
 
 ### Ficha factual: tecnologías y responsabilidades
 
@@ -321,7 +307,7 @@ Estos puntos se registran como **propuestas/pedientes del README original**, no 
 
 **¿Existe backend en Java, Node o Python?** En este repositorio se documenta un frontend Vue conectado directamente a Supabase. No debe inventarse una API de aplicación propia ni afirmar que existe un backend independiente sin una fuente adicional.
 
-**¿Qué desarrolló personalmente David?** No hay un desglose de autoría individual confirmado en esta documentación. Es incorrecto atribuirle automáticamente todos los componentes, la base de datos o decisiones de arquitectura.
+**¿Qué desarrolló personalmente David?** El historial confirma cambios de David en la carga de pósteres y en el formulario de recuperación de contraseña. El resto de la autoría individual no está documentado aquí.
 
 **¿Está listo para producción?** El frontend tiene URL de demo y funcionalidades implementadas en código, pero no están verificadas aquí las políticas RLS, la atomicidad del canje de tickets, la prevención de sobre-reservas ni los tests E2E; no afirmarlo como sistema auditado para producción.
 
