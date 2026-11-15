@@ -1,17 +1,5 @@
 [README.md](https://github.com/user-attachments/files/34864363/README.md)
----
-project_id: hakatoncine-cine-uleam
-project_name: Cine ULEAM
-repository: https://github.com/DavidJaramillo132/HakatonCine
-source_branch: main
-source_directory: cine-uleam-frontend
-project_type: aplicacion-web-frontend-con-backend-as-a-service
-primary_language: es
-stack: [Vue 3, TypeScript, Vite 7, Tailwind CSS 4, Supabase, PostgreSQL, Vue Router, QRCode, ZXing, OMDb, MyMemory]
-knowledge_status: verificado-parcialmente-mediante-codigo-publico
-review_date: 2026-11-14
-contribution_status: pendiente-de-validacion-personal
----
+
 
 # 🎬 Cine ULEAM — Plataforma de cartelera, reservas y control de acceso
 
